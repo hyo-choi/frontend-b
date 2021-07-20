@@ -2,6 +2,7 @@
 import React from 'react';
 import MaterialButton from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import Typo from '../Typo/Typo';
 
 const StyledButton = withStyles({
   root: {
@@ -24,7 +25,7 @@ const Button = ({ onClick, children, disabled }: ButtonProps) => {
       onClick={onClick}
       disabled={disabled}
     >
-      {children}
+      <Typo variant="button">{children}</Typo>
     </StyledButton>
   );
 };
