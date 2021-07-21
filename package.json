@@ -28,13 +28,13 @@
     "lint": "yarn eslint src/**/*.ts src/**/*.tsx",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-		"prepare": "yarn husky install"
+    "prepare": "yarn husky install"
   },
-	"husky": {
-		"hooks": {
-			"pre-commit": "yarn lint"
-		}
-	},
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -71,6 +71,7 @@
     "@storybook/addon-links": "^6.3.4",
     "@storybook/node-logger": "^6.3.4",
     "@storybook/preset-create-react-app": "^3.2.0",
+    "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.11",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",

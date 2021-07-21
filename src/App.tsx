@@ -1,15 +1,13 @@
 /* eslint-disable arrow-body-style */
 import React from 'react';
-import Button from './components/atoms/Button/Button';
+import { Switch, Route } from 'react-router-dom';
+import LoginPage from './components/pages/LoginPage/LoginPage';
 
 const App = () => {
   return (
-    <Button
-      onClick={() => {}}
-      disabled
-    >
-      test
-    </Button>
+    <Switch>
+      <Route path="/" exact component={LoginPage} />
+    </Switch>
   );
 };
 
