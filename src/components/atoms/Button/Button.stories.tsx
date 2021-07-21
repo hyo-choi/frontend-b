@@ -12,16 +12,22 @@ export const Default = () => {
   return (
     <>
       <>
-        <Button onClick={() => {}}>LONG LONG LONG CONTENT</Button>
-        <Button onClick={() => {}}>SHORT CONTENT</Button>
-        <Button onClick={() => {}}>SHORT</Button>
+        <Button>LONG LONG LONG CONTENT</Button>
+        <Button>SHORT CONTENT</Button>
+        <Button>SHORT</Button>
       </>
       <br />
       <>
-        <Button onClick={() => {}} disabled>LONG LONG LONG CONTENT</Button>
-        <Button onClick={() => {}} disabled>SHORT CONTENT</Button>
-        <Button onClick={() => {}} disabled>SHORT</Button>
+        <Button disabled>LONG LONG LONG CONTENT</Button>
+        <Button disabled>SHORT CONTENT</Button>
+        <Button disabled>SHORT</Button>
       </>
     </>
+  );
+};
+
+export const hrefButton = () => {
+  return (
+    <Button href="#">href Button</Button>
   );
 };
