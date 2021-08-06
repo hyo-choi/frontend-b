@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const StyledInput = withStyles({
   root: {
-    width: '30ch',
+    width: '25ch',
     margin: '0.25em',
   },
 })(TextField);
@@ -12,6 +12,7 @@ const StyledInput = withStyles({
 export type InputProps = {
   // eslint-disable-next-line no-unused-vars
   onChange: (event: React.ChangeEvent) => void,
+  value?: string,
   error?: boolean,
   type?: 'number' | 'text' | 'password',
   label?: string,
@@ -21,24 +22,35 @@ export type InputProps = {
 };
 
 const Input = ({
-  onChange, error, type, label, helperText, defaultValue, disabled,
+  onChange, value, error, type, label, helperText, defaultValue, disabled,
 // eslint-disable-next-line arrow-body-style
 }: InputProps) => {
-  return (
+  return (defaultValue ? (
     <StyledInput
       onChange={onChange}
+      defaultValue={defaultValue}
       type={type}
       label={label}
       helperText={helperText}
-      defaultValue={defaultValue}
       error={error}
       disabled={disabled}
     />
-  );
+  ) : (
+    <StyledInput
+      onChange={onChange}
+      value={value}
+      type={type}
+      label={label}
+      helperText={helperText}
+      error={error}
+      disabled={disabled}
+    />
+  ));
 };
 
 Input.defaultProps = {
   type: 'text',
+  value: '',
   label: '',
   helperText: '',
   defaultValue: '',

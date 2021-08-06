@@ -4,6 +4,7 @@ import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import MainTemplate from './MainTemplate';
+import { ContextProvider } from '../../../utils/hooks/useContext';
 
 export default {
   component: MainTemplate,
@@ -23,10 +24,12 @@ export const Default = () => {
 
   return (
     <BrowserRouter>
-      <MainTemplate
-        main={<div className={classes.div}>main. 배경색은 스토리에서 적용한 것입니다!</div>}
-        chat={<div className={classes.div}>chat. 배경색은 스토리에서 적용한 것입니다!</div>}
-      />
+      <ContextProvider>
+        <MainTemplate
+          main={<div className={classes.div}>main. 배경색은 스토리에서 적용한 것입니다!</div>}
+          chat={<div className={classes.div}>chat. 배경색은 스토리에서 적용한 것입니다!</div>}
+        />
+      </ContextProvider>
     </BrowserRouter>
   );
 };
