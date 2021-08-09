@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,8 @@ import LoginPage from './components/pages/LoginPage/LoginPage';
 import makeAPIPath from './utils/utils';
 import RegisterPage from './components/pages/RegisterPage/RegisterPage';
 import MainTemplate from './components/templates/MainTemplate/MainTemplate';
+import MFARegisterPage from './components/pages/MFARegisterPage/MFARegisterPage';
+import MFAPage from './components/pages/MFAPage/MFAPage';
 
 const useStyles = makeStyles({
   progress: {
@@ -32,7 +34,6 @@ const useStyles = makeStyles({
 });
 
 const App = () => {
-  const history = useHistory();
   const appState = useAppState();
   const appDispatch = useAppDispatch();
   const userState = useUserState();
@@ -48,9 +49,6 @@ const App = () => {
      * 이 부분은 서브젝트 요구사항과 안 맞는 듯해서 추후 고민해봐야 할 것 같습니다.
     */
     axios.get(makeAPIPath('/session'))
-      .finally(() => {
-        appDispatch({ type: 'endLoading' });
-      })
       .then(() => {
         axios.get(makeAPIPath('/users/me'))
           .then((response) => {
@@ -61,16 +59,13 @@ const App = () => {
             });
           })
           .catch((error) => {
-            if (error.response) {
-              /** FIXME: 로그아웃+2FA 활성 상태에서는 /users/me 응답이 403입니다.
-               * 이때문에 로그인 하려는 상황에서도 register로 이동하는 문제가 발생하는데,
-               * 2FA 페이지 구현할 때 새로운 API를 이용하여 고치면 될 것 같습니다.
-               */
-              history.push('/register');
-            } else {
+            if (!(error.response)) {
               toast.error(error.message);
             }
           });
+      })
+      .finally(() => {
+        appDispatch({ type: 'endLoading' });
       })
       .catch((error) => {
         if (error.response) {
@@ -92,6 +87,8 @@ const App = () => {
   ) : (
     <Switch>
       <Route exact path="/register" component={RegisterPage} />
+      <Route exact path="/register/2fa" component={MFARegisterPage} />
+      <Route exact path="/2fa" component={MFAPage} />
       <Route path="/" component={LoginPage} />
     </Switch>
   );

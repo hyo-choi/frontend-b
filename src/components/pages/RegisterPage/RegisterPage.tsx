@@ -107,11 +107,7 @@ const RegisterPage = () => {
       })
       .then(() => {
         if (is2FAEnabled) {
-          /**
-           * FIXME: 2FA 페이지가 구현되고 나면 2FA 페이지로 이동시켜야 합니다.
-           * history.push('/register/2FA') 같은 식으로 하면 될 것 같습니다.
-           */
-          history.push('/');
+          history.push('/register/2fa');
         } else {
           history.push('/');
         }
