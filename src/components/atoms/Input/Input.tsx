@@ -10,8 +10,7 @@ const StyledInput = withStyles({
 })(TextField);
 
 export type InputProps = {
-  // eslint-disable-next-line no-unused-vars
-  onChange: (event: React.ChangeEvent) => void,
+  onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>,
   value?: string,
   error?: boolean,
   type?: 'number' | 'text' | 'password',

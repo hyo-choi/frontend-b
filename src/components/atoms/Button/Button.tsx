@@ -11,6 +11,7 @@ const StyledButton = withStyles({
 })(MaterialButton);
 
 type ButtonProps = {
+  variant?: 'contained' | 'outlined' | 'text',
   onClick?: MouseEventHandler<HTMLButtonElement>,
   type?: 'button' | 'submit' | 'reset',
   children: React.ReactNode,
@@ -19,11 +20,11 @@ type ButtonProps = {
 };
 
 const Button = ({
-  onClick, type, children, href, disabled,
+  variant, onClick, type, children, href, disabled,
 }: ButtonProps) => {
   return (
     <StyledButton
-      variant="contained"
+      variant={variant}
       type={type}
       color="primary"
       onClick={onClick}
@@ -36,6 +37,7 @@ const Button = ({
 };
 
 Button.defaultProps = {
+  variant: 'contained',
   onClick: null,
   type: 'button',
   href: undefined,
