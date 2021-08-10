@@ -11,6 +11,7 @@ const StyledButton = withStyles({
 })(MaterialButton);
 
 type ButtonProps = {
+  className?: string,
   variant?: 'contained' | 'outlined' | 'text',
   onClick?: MouseEventHandler<HTMLButtonElement>,
   type?: 'button' | 'submit' | 'reset',
@@ -20,10 +21,11 @@ type ButtonProps = {
 };
 
 const Button = ({
-  variant, onClick, type, children, href, disabled,
+  className, variant, onClick, type, children, href, disabled,
 }: ButtonProps) => {
   return (
     <StyledButton
+      className={className}
       variant={variant}
       type={type}
       color="primary"
@@ -37,6 +39,7 @@ const Button = ({
 };
 
 Button.defaultProps = {
+  className: null,
   variant: 'contained',
   onClick: null,
   type: 'button',
