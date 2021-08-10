@@ -20,10 +20,10 @@ const useStyles = makeStyles({
   },
 });
 
-type digitString = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '';
+type DigitString = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '';
 
-const usePrevious = (value: digitString[]) => {
-  const ref = useRef<digitString[]>(['', '', '', '', '', '']);
+const usePrevious = (value: DigitString[]) => {
+  const ref = useRef<DigitString[]>(['', '', '', '', '', '']);
   useEffect(() => {
     ref.current = value;
   });
@@ -31,7 +31,7 @@ const usePrevious = (value: digitString[]) => {
 };
 
 const MFAPage = () => {
-  const [inputs, setInputs] = useState<digitString[]>(['', '', '', '', '', '']);
+  const [inputs, setInputs] = useState<DigitString[]>(['', '', '', '', '', '']);
   const refs = inputs.map(() => useRef<HTMLInputElement | HTMLTextAreaElement>(null));
   const appDispatch = useAppDispatch();
   const userDispatch = useUserDispatch();
@@ -55,8 +55,8 @@ const MFAPage = () => {
     const { name, value } = event.target;
     if (value === '' || /^[0-9]$/.test(value)) {
       const index = Number(name);
-      const renew: digitString[] = inputs.map((input: digitString, idx): digitString => (
-        idx === index ? value as digitString : input
+      const renew: DigitString[] = inputs.map((input: DigitString, idx): DigitString => (
+        idx === index ? value as DigitString : input
       ));
       setInputs(renew);
     }

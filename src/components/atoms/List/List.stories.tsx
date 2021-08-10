@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import React from 'react';
 import { Meta } from '@storybook/react';
 import { withStyles } from '@material-ui/core/styles';

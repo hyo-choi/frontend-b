@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import Input, { InputProps } from './Input';
@@ -10,34 +9,32 @@ export default {
 
 const InputStory: Story<InputProps> = ({
   onChange, type, label,
-}: InputProps) => {
-  return (
-    <>
-      <Input
-        onChange={onChange}
-        type={type}
-        label={label}
-        helperText={`${type} input helper`}
-      />
-      <Input
-        onChange={onChange}
-        type={type}
-        label={`${type} error`}
-        defaultValue={type === 'number' ? '4242' : 'text input'}
-        helperText={`${type} input helper`}
-        error
-      />
-      <Input
-        onChange={onChange}
-        type={type}
-        label={`${type} disabled`}
-        defaultValue="disabled input"
-        helperText={`${type} input helper`}
-        disabled
-      />
-    </>
-  );
-};
+}: InputProps) => (
+  <>
+    <Input
+      onChange={onChange}
+      type={type}
+      label={label}
+      helperText={`${type} input helper`}
+    />
+    <Input
+      onChange={onChange}
+      type={type}
+      label={`${type} error`}
+      defaultValue={type === 'number' ? '4242' : 'text input'}
+      helperText={`${type} input helper`}
+      error
+    />
+    <Input
+      onChange={onChange}
+      type={type}
+      label={`${type} disabled`}
+      defaultValue="disabled input"
+      helperText={`${type} input helper`}
+      disabled
+    />
+  </>
+);
 
 export const Text = InputStory.bind({});
 Text.args = {

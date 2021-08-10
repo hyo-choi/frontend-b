@@ -9,13 +9,10 @@ export default {
   component: Menu,
 } as Meta;
 
-// eslint-disable-next-line arrow-body-style
-export const Default = () => {
-  return (
-    <BrowserRouter>
-      <ContextProvider>
-        <Menu />
-      </ContextProvider>
-    </BrowserRouter>
-  );
-};
+export const Default = () => (
+  <BrowserRouter>
+    <ContextProvider>
+      <Menu />
+    </ContextProvider>
+  </BrowserRouter>
+);

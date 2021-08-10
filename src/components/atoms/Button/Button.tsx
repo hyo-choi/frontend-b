@@ -1,5 +1,4 @@
-/* eslint-disable arrow-body-style */
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 import MaterialButton from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Typo from '../Typo/Typo';
@@ -13,7 +12,7 @@ const StyledButton = withStyles({
 type ButtonProps = {
   className?: string,
   variant?: 'contained' | 'outlined' | 'text',
-  onClick?: MouseEventHandler<HTMLButtonElement>,
+  onClick?: React.MouseEventHandler<HTMLButtonElement>,
   type?: 'button' | 'submit' | 'reset',
   children: React.ReactNode,
   href?: string,
@@ -22,21 +21,19 @@ type ButtonProps = {
 
 const Button = ({
   className, variant, onClick, type, children, href, disabled,
-}: ButtonProps) => {
-  return (
-    <StyledButton
-      className={className}
-      variant={variant}
-      type={type}
-      color="primary"
-      onClick={onClick}
-      href={href}
-      disabled={disabled}
-    >
-      <Typo variant="button">{children}</Typo>
-    </StyledButton>
-  );
-};
+}: ButtonProps) => (
+  <StyledButton
+    className={className}
+    variant={variant}
+    type={type}
+    color="primary"
+    onClick={onClick}
+    href={href}
+    disabled={disabled}
+  >
+    <Typo variant="button">{children}</Typo>
+  </StyledButton>
+);
 
 Button.defaultProps = {
   className: null,

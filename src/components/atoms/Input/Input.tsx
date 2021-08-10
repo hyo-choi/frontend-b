@@ -22,9 +22,8 @@ export type InputProps = {
 
 const Input = ({
   onChange, value, error, type, label, helperText, defaultValue, disabled,
-// eslint-disable-next-line arrow-body-style
-}: InputProps) => {
-  return (defaultValue ? (
+}: InputProps) => (
+  defaultValue ? (
     <StyledInput
       onChange={onChange}
       defaultValue={defaultValue}
@@ -44,8 +43,8 @@ const Input = ({
       error={error}
       disabled={disabled}
     />
-  ));
-};
+  )
+);
 
 Input.defaultProps = {
   type: 'text',

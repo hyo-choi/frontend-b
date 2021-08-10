@@ -23,7 +23,7 @@ export const Default = () => {
         content="This is sample dialog message"
         isOpen={isOpen}
         buttons={buttons}
-        handleClose={() => { setOpen(false); }}
+        onClose={() => { setOpen(false); }}
       />
     </>
   );
@@ -70,7 +70,7 @@ export const WithForm = () => {
         content={form}
         isOpen={isOpen}
         buttons={buttons}
-        handleClose={handleClose}
+        onClose={handleClose}
       />
     </>
   );

@@ -5,11 +5,11 @@ import { UserInfoType, UserStatusType } from '../../../types/User';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
 
-type styleProps = { status: UserStatusType };
+type StyleProps = { status: UserStatusType };
 
 const useStyles = makeStyles({
   status: {
-    color: (props: styleProps) => {
+    color: (props: StyleProps) => {
       switch (props.status) {
         case 'ONLINE':
           return 'lightgreen';
@@ -28,7 +28,6 @@ export type UserProfileProps = {
   userInfo: UserInfoType,
 };
 
-// eslint-disable-next-line arrow-body-style
 const UserProfile = ({ userInfo }: UserProfileProps) => {
   const { name, avatar, status } = userInfo;
   const classes = useStyles({ status });

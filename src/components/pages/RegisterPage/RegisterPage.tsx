@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -130,7 +129,7 @@ const RegisterPage = () => {
         title="회원가입 완료"
         content="회원가입이 완료되어 로그인 화면으로 돌아갑니다. 서비스를 이용하시려면 로그인 해주세요."
         buttons={<Button variant="text" onClick={() => { history.push('/'); }}>확인</Button>}
-        handleClose={() => { history.push('/'); }}
+        onClose={() => { history.push('/'); }}
       />
       <Grid container justifyContent="center">
         <Grid

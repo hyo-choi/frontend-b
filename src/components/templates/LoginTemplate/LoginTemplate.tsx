@@ -16,7 +16,6 @@ type LoginTemplateProps = {
 
 const LoginTemplate = ({
   logo, input, button,
-// eslint-disable-next-line arrow-body-style
 }: LoginTemplateProps) => {
   const classes = useStyles();
 

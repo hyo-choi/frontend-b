@@ -21,20 +21,17 @@ type TypoProps = {
 
 const Typo = ({
   className, variant, display, align, gutterBottom, children,
-// eslint-disable-next-line arrow-body-style
-}: TypoProps) => {
-  return (
-    <StyledTypo
-      className={className}
-      variant={variant}
-      align={align}
-      display={display}
-      gutterBottom={gutterBottom}
-    >
-      {children}
-    </StyledTypo>
-  );
-};
+}: TypoProps) => (
+  <StyledTypo
+    className={className}
+    variant={variant}
+    align={align}
+    display={display}
+    gutterBottom={gutterBottom}
+  >
+    {children}
+  </StyledTypo>
+);
 
 Typo.defaultProps = {
   className: '',
