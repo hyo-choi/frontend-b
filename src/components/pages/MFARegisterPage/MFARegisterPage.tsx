@@ -19,7 +19,8 @@ const useStyles = makeStyles({
 
 const MFARegisterPage = () => {
   const [QRImageSrc, setQRSrc] = useState<string>('');
-  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isConfirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [isRegisterOpen, setRegisterOpen] = useState<boolean>(false);
   const classes = useStyles();
   const appDispatch = useAppDispatch();
   const history = useHistory();
@@ -37,24 +38,37 @@ const MFARegisterPage = () => {
   }, []);
 
   const handleClick = () => {
-    setDialogOpen(true);
+    setConfirmOpen(true);
   };
 
   const buttons = (
     <>
-      <Button variant="text" onClick={() => { setDialogOpen(false); }}>아니오, 아직 등록하지 않았습니다</Button>
-      <Button onClick={() => { history.push('/'); }}>네, 등록을 완료했습니다</Button>
+      <Button variant="text" onClick={() => { setConfirmOpen(false); }}>아니오, 아직 등록하지 않았습니다</Button>
+      <Button onClick={() => {
+        setConfirmOpen(false);
+        setRegisterOpen(true);
+      }}
+      >
+        네, 등록을 완료했습니다
+      </Button>
     </>
   );
 
   return (
     <>
       <Dialog
-        isOpen={isDialogOpen}
+        isOpen={isConfirmOpen}
         title="QR 코드 등록 확인"
         content="Google OTP 앱에 QR 코드를 정상적으로 등록하셨나요? QR 코드를 등록하지 않고 해당 페이지를 벗어나면 2FA 인증이 불가능합니다. 확인하셨다면 아래 버튼을 클릭해주세요."
         buttons={buttons}
-        handleClose={() => { setDialogOpen(false); }}
+        handleClose={() => { setConfirmOpen(false); }}
+      />
+      <Dialog
+        isOpen={isRegisterOpen}
+        title="회원가입 완료"
+        content="회원가입이 완료되어 로그인 화면으로 돌아갑니다. 서비스를 이용하시려면 로그인 해주세요."
+        buttons={<Button variant="text" onClick={() => { history.push('/'); }}>확인</Button>}
+        handleClose={() => { history.push('/'); }}
       />
       <LoginTemplate
         input={(

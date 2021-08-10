@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
+// eslint-disable-next-line camelcase
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   useAppDispatch, useAppState, useUserDispatch, useUserState,
@@ -34,6 +36,7 @@ const useStyles = makeStyles({
 });
 
 const App = () => {
+  const theme = unstable_createMuiStrictModeTheme();
   const appState = useAppState();
   const appDispatch = useAppDispatch();
   const userState = useUserState();
@@ -94,7 +97,7 @@ const App = () => {
   );
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       {appState.isLoading
         && (
         <div className={classes.block}>
@@ -117,7 +120,7 @@ const App = () => {
         pauseOnHover
       />
       {children}
-    </>
+    </ThemeProvider>
   );
 };
 
