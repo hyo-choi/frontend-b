@@ -12,7 +12,6 @@ export default {
 
 const StyledCard = withStyles({
   root: {
-    width: '90vw',
     height: '50px',
   },
 })(Card);

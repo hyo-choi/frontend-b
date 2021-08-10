@@ -49,13 +49,15 @@ const List = ({ height, scroll, children }: ListProps) => {
       item
       container
       className={classes.root}
-      justifyContent="center"
-      alignItems="center"
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="stretch"
+      wrap="nowrap"
       spacing={1}
       xs={12}
     >
       {children || (
-        <Grid item container className={classes.empty} justifyContent="center" alignItems="center">
+        <Grid item container className={classes.empty} justifyContent="center" alignItems="center" xs={12}>
           <Typo>Empty</Typo>
         </Grid>
       )}
