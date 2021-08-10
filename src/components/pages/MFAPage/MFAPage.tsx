@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useUserDispatch } from '../../../utils/hooks/useContext';
@@ -91,10 +92,10 @@ const MFAPage = () => {
   return (
     <LoginTemplate
       input={(
-        <>
+        <Grid item container direction="column" alignItems="center">
           <Typo className={classes.typo}>인증 번호를 정상 입력하였는데도 로그인할 수 없는 경우 담당자에게 문의해주세요.</Typo>
           <main className={classes.inputs}>{Inputs}</main>
-        </>
+        </Grid>
       )}
       button={<Button onClick={handleClick}>2FA 인증</Button>}
     />

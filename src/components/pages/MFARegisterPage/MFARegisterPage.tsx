@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Button from '../../atoms/Button/Button';
 import Dialog from '../../molecules/Dialog/Dialog';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
@@ -72,10 +73,10 @@ const MFARegisterPage = () => {
       />
       <LoginTemplate
         input={(
-          <>
-            <figcaption><Typo>Google OTP 어플리케이션을 설치하고 아래 QR 코드를 스캔해주세요.</Typo></figcaption>
+          <Grid item container direction="column" alignItems="center">
+            <figcaption><Typo>Google OTP 어플리케이션을 설치하고 QR 코드를 스캔해주세요.</Typo></figcaption>
             <figure><img className={classes.image} alt="QR Code" src={QRImageSrc} /></figure>
-          </>
+          </Grid>
         )}
         button={<Button onClick={handleClick}>2FA 등록</Button>}
       />
