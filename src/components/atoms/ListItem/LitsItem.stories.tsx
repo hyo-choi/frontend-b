@@ -9,6 +9,8 @@ import Button from '../Button/Button';
 import List from '../List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 import { ContextProvider } from '../../../utils/hooks/useContext';
+import ProfileCard from '../../organisms/ProfileCard/ProfileCard';
+import { UserInfoType } from '../../../types/User';
 
 export default {
   component: ListItem,
@@ -86,3 +88,36 @@ export const WithMainTemplate = () => (
     </ContextProvider>
   </BrowserRouter>
 );
+
+export const WithListAndProfileCard = () => {
+  const handleClick = () => {};
+  const userInfo: UserInfoType = {
+    id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
+    name: 'USERNAME',
+    avatar: '',
+    status: 'OFFLINE',
+  };
+  const ProfileList = () => (
+    <ListItem>
+      <ProfileCard
+        userInfo={userInfo}
+        onProfileEdit={handleClick}
+        onFriendAdd={handleClick}
+        onUserBlock={handleClick}
+        onDMClick={handleClick}
+        onMatchInvite={handleClick}
+      />
+    </ListItem>
+  );
+
+  return (
+    <ContextProvider>
+      <List height="80vh" scroll>
+        <ProfileList />
+        <ProfileList />
+        <ProfileList />
+        <ProfileList />
+      </List>
+    </ContextProvider>
+  );
+};
