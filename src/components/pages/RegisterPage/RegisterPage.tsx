@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -6,13 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import MaterialButton from '@material-ui/core/Button';
 import { useAppDispatch } from '../../../utils/hooks/useContext';
-import makeAPIPath from '../../../utils/utils';
+import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
 import Input from '../../atoms/Input/Input';
 import Typo from '../../atoms/Typo/Typo';
 import Switch from '../../atoms/Switch/Switch';
 import Button from '../../atoms/Button/Button';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Dialog from '../../molecules/Dialog/Dialog';
+import useDialog from '../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles({
   root: {
@@ -29,17 +31,40 @@ const useStyles = makeStyles({
 
 const RegisterPage = () => {
   const [name, setName] = useState<string>('');
+  const [ftId, setFtId] = useState<string>('');
   const [helperText, setHelperText] = useState<string>('영문+숫자 3-12자');
   const [isValidName, setNameValid] = useState<boolean>(false);
   const [isNameChecked, setNameChecked] = useState<boolean>(false);
   const [is2FAEnabled, set2FA] = useState<boolean>(false);
-  const [isRegisterOpen, setRegisterOpen] = useState<boolean>(false);
   const [filename, setFilename] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<string | Blob>('');
   const [previewSrc, setPreviewSrc] = useState<string>(makeAPIPath('/files/avatar/default.png'));
+  const {
+    isOpen, setOpen, dialog, setDialog,
+  } = useDialog();
   const appDispatch = useAppDispatch();
   const classes = useStyles();
   const history = useHistory();
+
+  useEffect(() => {
+    appDispatch({ type: 'loading' });
+    asyncGetRequest(makeAPIPath('/users/me'))
+      .finally(() => {
+        appDispatch({ type: 'endLoading' });
+      })
+      .then(() => {
+        toast.error('잘못된 접근입니다.');
+        history.replace('/');
+      })
+      .catch(() => {
+        const id: string | undefined = Cookies.get('ftId');
+        if (id) setFtId(id);
+        else {
+          toast.error('가입 중 문제가 생겼습니다. 회원가입을 다시 시도해주세요.');
+          history.push('/');
+        }
+      });
+  }, []);
 
   useEffect(() => {
     if (!imageFile) {
@@ -97,6 +122,7 @@ const RegisterPage = () => {
     formData.append('avatar', imageFile);
     formData.append('name', name);
     formData.append('enable2FA', String(is2FAEnabled));
+    formData.append('ftId', ftId);
     appDispatch({ type: 'loading' });
     axios({
       url: makeAPIPath('/users'),
@@ -108,10 +134,19 @@ const RegisterPage = () => {
       })
       .then(() => {
         if (is2FAEnabled) {
-          history.push('/register/2fa');
+          setDialog({
+            title: '회원가입 완료',
+            content: '회원가입이 완료되어 로그인 화면으로 돌아갑니다. 로그인 시 2FA 등록을 진행합니다.',
+            onClose: () => { history.push('/'); },
+          });
         } else {
-          setRegisterOpen(true);
+          setDialog({
+            title: '회원가입 완료',
+            content: '회원가입이 완료되어 로그인 화면으로 돌아갑니다. 서비스를 이용하시려면 로그인 해주세요.',
+            onClose: () => { history.push('/'); },
+          });
         }
+        setOpen(true);
       })
       .catch((error) => {
         if (error.response) {
@@ -125,11 +160,11 @@ const RegisterPage = () => {
   return (
     <>
       <Dialog
-        isOpen={isRegisterOpen}
-        title="회원가입 완료"
-        content="회원가입이 완료되어 로그인 화면으로 돌아갑니다. 서비스를 이용하시려면 로그인 해주세요."
+        isOpen={isOpen}
+        title={dialog.title}
+        content={dialog.content}
         buttons={<Button variant="text" onClick={() => { history.push('/'); }}>확인</Button>}
-        onClose={() => { history.push('/'); }}
+        onClose={dialog.onClose}
       />
       <Grid container justifyContent="center">
         <Grid

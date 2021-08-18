@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useUserDispatch } from '../../../utils/hooks/useContext';
-import makeAPIPath from '../../../utils/utils';
+import { useAppDispatch, useUserDispatch, useUserState } from '../../../utils/hooks/useContext';
+import { makeAPIPath } from '../../../utils/utils';
 import Button from '../../atoms/Button/Button';
 import DigitInput from '../../atoms/DigitInput/DigitInput';
 import Typo from '../../atoms/Typo/Typo';
@@ -36,8 +36,17 @@ const MFAPage = () => {
   const appDispatch = useAppDispatch();
   const userDispatch = useUserDispatch();
   const history = useHistory();
+  const userState = useUserState();
   const prevInputs = usePrevious(inputs);
   const classes = useStyles();
+
+  useEffect(() => {
+    const { enable2FA, authenticatorSecret, isSecondFactorAuthenticated } = userState;
+    if (!enable2FA || (enable2FA && authenticatorSecret && isSecondFactorAuthenticated)) {
+      toast.error('잘못된 접근입니다.');
+      history.replace('/');
+    }
+  }, []);
 
   useEffect(() => {
     let idx = 0;
@@ -79,9 +88,21 @@ const MFAPage = () => {
         appDispatch({ type: 'endLoading' });
       })
       .then((response) => {
-        const { id, name, avatar } = response.data;
-        userDispatch({ type: 'login', info: { id, name, avatar } });
-        history.push('/');
+        const {
+          id, name, avatar, enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
+        } = response.data;
+        userDispatch({
+          type: 'login',
+          info: {
+            id,
+            name,
+            avatar,
+            enable2FA,
+            authenticatorSecret,
+            isSecondFactorAuthenticated,
+          },
+        });
+        history.replace('/');
       })
       .catch((error) => {
         if (error.response) toast.error('인증 번호가 잘못되었습니다.');

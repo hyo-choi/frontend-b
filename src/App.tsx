@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import axios from 'axios';
 // eslint-disable-next-line camelcase
 import { unstable_createMuiStrictModeTheme } from '@material-ui/core';
@@ -11,7 +11,7 @@ import {
   useAppDispatch, useAppState, useUserDispatch, useUserState,
 } from './utils/hooks/useContext';
 import LoginPage from './components/pages/LoginPage/LoginPage';
-import makeAPIPath from './utils/utils';
+import { asyncGetRequest, makeAPIPath } from './utils/utils';
 import RegisterPage from './components/pages/RegisterPage/RegisterPage';
 import MainTemplate from './components/templates/MainTemplate/MainTemplate';
 import MFARegisterPage from './components/pages/MFARegisterPage/MFARegisterPage';
@@ -42,6 +42,7 @@ const App = () => {
   const userState = useUserState();
   const userDispatch = useUserDispatch();
   const classes = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     axios.defaults.withCredentials = true;
@@ -51,24 +52,27 @@ const App = () => {
      * 서버에서 콘솔에 적도록 하는 것이라 프론트에서 핸들링이 불가한데,
      * 이 부분은 서브젝트 요구사항과 안 맞는 듯해서 추후 고민해봐야 할 것 같습니다.
     */
-    axios.get(makeAPIPath('/session'))
-      .then(() => {
-        axios.get(makeAPIPath('/users/me'))
-          .then((response) => {
-            const { id, name, avatar } = response.data;
-            userDispatch({
-              type: 'login',
-              info: { id, name, avatar },
-            });
-          })
-          .catch((error) => {
-            if (!(error.response)) {
-              toast.error(error.message);
-            }
-          });
-      })
+    asyncGetRequest(makeAPIPath('/users/me'))
       .finally(() => {
         appDispatch({ type: 'endLoading' });
+      })
+      .then((response) => {
+        const {
+          id, name, avatar, enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
+        } = response.data;
+        userDispatch({
+          type: 'login',
+          info: {
+            id,
+            name,
+            avatar,
+            enable2FA,
+            authenticatorSecret,
+            isSecondFactorAuthenticated,
+          },
+        });
+        if (enable2FA && !authenticatorSecret) history.push('/register/2fa');
+        else if (enable2FA && !isSecondFactorAuthenticated) history.push('/2fa');
       })
       .catch((error) => {
         if (error.response) {
@@ -79,22 +83,18 @@ const App = () => {
       });
   }, []);
 
-  const children = userState.id ? (
-    /**
-     * FIXME: Main Page 컴포넌트가 없어 임시로 적어 두었습니다.
-     * 컴포넌트 구현 후 교체해야 합니다.
-     */
+  const children = (userState.id ? (
     <Switch>
-      <Route exact path="/" render={() => <MainTemplate main={<h1>asd</h1>} chat={<h1>asd</h1>} />} />
+      <Route exact path="/register/2fa" component={MFARegisterPage} />
+      <Route exact path="/2fa" component={MFAPage} />
+      <Route exact path="/" render={() => <MainTemplate main={<h1>1234</h1>} chat={<h1>1234</h1>} />} />
     </Switch>
   ) : (
     <Switch>
       <Route exact path="/register" component={RegisterPage} />
-      <Route exact path="/register/2fa" component={MFARegisterPage} />
-      <Route exact path="/2fa" component={MFAPage} />
       <Route path="/" component={LoginPage} />
     </Switch>
-  );
+  ));
 
   return (
     <ThemeProvider theme={theme}>

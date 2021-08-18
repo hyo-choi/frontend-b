@@ -7,7 +7,7 @@ import { makeStyles, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typo from '../../atoms/Typo/Typo';
 import { useAppDispatch, useUserDispatch } from '../../../utils/hooks/useContext';
-import makeAPIPath from '../../../utils/utils';
+import { makeAPIPath } from '../../../utils/utils';
 
 const useStyles = makeStyles({
   cursor: {

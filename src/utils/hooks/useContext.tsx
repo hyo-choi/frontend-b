@@ -6,12 +6,18 @@ type UserStateType = {
   id: string,
   name: string,
   avatar: string,
+  enable2FA: boolean,
+  authenticatorSecret: boolean,
+  isSecondFactorAuthenticated: boolean,
 }
 
 const initialUserState: UserStateType = {
   id: '',
   name: '',
   avatar: '',
+  enable2FA: false,
+  authenticatorSecret: false,
+  isSecondFactorAuthenticated: false,
 };
 
 type UserActionType = { type: 'login', info: UserStateType } | { type: 'logout' }

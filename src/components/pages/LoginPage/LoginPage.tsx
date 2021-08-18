@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppDispatch } from '../../../utils/hooks/useContext';
-import makeAPIPath from '../../../utils/utils';
+import { makeAPIPath } from '../../../utils/utils';
 import Button from '../../atoms/Button/Button';
 import Typo from '../../atoms/Typo/Typo';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
