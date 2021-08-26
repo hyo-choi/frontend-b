@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type DialogProps = {
+export type DialogProps = {
   title?: React.ReactNode,
   content: React.ReactNode,
   buttons?: React.ReactNode,
@@ -8,7 +8,7 @@ type DialogProps = {
   onClose: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void,
 };
 
-const initialDialog = {
+export const initialDialog = {
   content: '',
   buttons: null,
   onClose: () => {},

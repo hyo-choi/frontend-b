@@ -1,17 +1,9 @@
 import React, {
   createContext, useReducer, useContext, Dispatch,
 } from 'react';
+import { MyInfoType } from '../../types/User';
 
-type UserStateType = {
-  id: string,
-  name: string,
-  avatar: string,
-  enable2FA: boolean,
-  authenticatorSecret: boolean,
-  isSecondFactorAuthenticated: boolean,
-}
-
-const initialUserState: UserStateType = {
+const initialUserState: MyInfoType = {
   id: '',
   name: '',
   avatar: '',
@@ -20,8 +12,8 @@ const initialUserState: UserStateType = {
   isSecondFactorAuthenticated: false,
 };
 
-type UserActionType = { type: 'login', info: UserStateType } | { type: 'logout' }
-                    | { type: 'reset' };
+type UserActionType = { type: 'login', info: MyInfoType } | { type: 'logout' }
+                    | { type: 'reset' } | { type: 'edit', info: MyInfoType };
 
 type AppStateType = {
   isLoading: boolean,
@@ -36,13 +28,15 @@ type AppActionType = { type: 'loading' } | { type: 'endLoading' };
 const AppStateContext = createContext<AppStateType | undefined>(undefined);
 const AppDispatchContext = createContext<Dispatch<AppActionType> | undefined>(undefined);
 
-const UserStateContext = createContext<UserStateType | undefined>(undefined);
+const UserStateContext = createContext<MyInfoType | undefined>(undefined);
 const UserDispatchContext = createContext<Dispatch<UserActionType> | undefined>(undefined);
 
-function UserReducer(state: UserStateType, action: UserActionType): UserStateType {
+function UserReducer(state: MyInfoType, action: UserActionType): MyInfoType {
   switch (action.type) {
     case 'login':
       return { ...action.info };
+    case 'edit':
+      return { ...state, ...action.info };
     case 'logout':
     case 'reset':
     default:

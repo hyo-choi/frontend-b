@@ -1,7 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { UserInfoType, UserStatusType } from '../../../types/User';
+import Badge from '@material-ui/core/Badge';
+import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import { RelatedInfoType, UserStatusType } from '../../../types/User';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
 
@@ -24,12 +26,22 @@ const useStyles = makeStyles({
   },
 });
 
+const StyledBadge = withStyles(() => createStyles({
+  badge: {
+    right: 18,
+    top: 18,
+  },
+}))(Badge);
+
 export type UserProfileProps = {
-  userInfo: UserInfoType,
+  userInfo: RelatedInfoType,
+  profile?: boolean,
 };
 
-const UserProfile = ({ userInfo }: UserProfileProps) => {
-  const { name, avatar, status } = userInfo;
+const UserProfile = ({ userInfo, profile }: UserProfileProps) => {
+  const {
+    name, avatar, status, relationship,
+  } = userInfo;
   const classes = useStyles({ status });
 
   const makeStatusString = (): string => {
@@ -47,20 +59,39 @@ const UserProfile = ({ userInfo }: UserProfileProps) => {
   return (
     <Grid item container justifyContent="space-around" alignItems="center" xs={5}>
       <Grid container item xs={6} justifyContent="center">
-        <Avatar size="large" alt={name} src={avatar} />
+        <StyledBadge
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          overlap="circular"
+          badgeContent={relationship === 'FRIEND' ? (
+            <StarRoundedIcon
+              color="secondary"
+            />
+          ) : <></>}
+        >
+          <Avatar size="large" alt={name} src={avatar} />
+        </StyledBadge>
       </Grid>
       <Grid item xs={6}>
-        <Typo variant="h5">{name}</Typo>
+        <Typo variant={profile ? 'h5' : 'h6'}>{name}</Typo>
         <Typo className={classes.status}>{makeStatusString()}</Typo>
+        {profile && (
         <Typo
           variant="body2"
           // FIXME: game 관련 정보가 fix되면 수정해야 합니다.
         >
           n점 / n승 n패 (임시)
         </Typo>
+        )}
       </Grid>
     </Grid>
   );
+};
+
+UserProfile.defaultProps = {
+  profile: false,
 };
 
 export default UserProfile;

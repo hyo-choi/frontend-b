@@ -17,19 +17,20 @@ type ButtonProps = {
   children: React.ReactNode,
   href?: string,
   disabled?: boolean,
+  color?: 'primary' | 'secondary',
 };
 
 const Button = ({
-  className, variant, onClick, type, children, href, disabled,
+  className, variant, onClick, type, children, href, disabled, color,
 }: ButtonProps) => (
   <StyledButton
     className={className}
     variant={variant}
     type={type}
-    color="primary"
     onClick={onClick}
     href={href}
     disabled={disabled}
+    color={color}
   >
     <Typo variant="button">{children}</Typo>
   </StyledButton>
@@ -42,6 +43,7 @@ Button.defaultProps = {
   type: 'button',
   href: undefined,
   disabled: false,
+  color: 'primary',
 };
 
 export default Button;

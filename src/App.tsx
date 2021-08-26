@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import {
+  Switch, Route, Redirect, useHistory,
+} from 'react-router-dom';
 import axios from 'axios';
 // eslint-disable-next-line camelcase
 import { unstable_createMuiStrictModeTheme } from '@material-ui/core';
@@ -16,6 +18,7 @@ import RegisterPage from './components/pages/RegisterPage/RegisterPage';
 import MainTemplate from './components/templates/MainTemplate/MainTemplate';
 import MFARegisterPage from './components/pages/MFARegisterPage/MFARegisterPage';
 import MFAPage from './components/pages/MFAPage/MFAPage';
+import ProfilePage from './components/pages/ProfilePage/ProfilePage';
 
 const useStyles = makeStyles({
   progress: {
@@ -56,16 +59,16 @@ const App = () => {
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
-      .then((response) => {
+      .then(({ data }) => {
         const {
           id, name, avatar, enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
-        } = response.data;
+        } = data;
         userDispatch({
           type: 'login',
           info: {
             id,
             name,
-            avatar,
+            avatar: makeAPIPath(`/${avatar}`),
             enable2FA,
             authenticatorSecret,
             isSecondFactorAuthenticated,
@@ -83,18 +86,37 @@ const App = () => {
       });
   }, []);
 
-  const children = (userState.id ? (
+  const children = userState.id ? (
     <Switch>
       <Route exact path="/register/2fa" component={MFARegisterPage} />
       <Route exact path="/2fa" component={MFAPage} />
-      <Route exact path="/" render={() => <MainTemplate main={<h1>1234</h1>} chat={<h1>1234</h1>} />} />
+      <Route path="/">
+        <MainTemplate
+          main={(
+            <Switch>
+              <Route exact path="/">
+                <Redirect to="/game" />
+              </Route>
+              <Route path="/profile/:username" component={ProfilePage} />
+              <Route exact path="/profile">
+                <Redirect to={`/profile/${userState.name}`} />
+              </Route>
+              <Route exact path="/404" render={() => <h1>404 Not found</h1>} />
+              <Route path="/">
+                <Redirect to="/404" />
+              </Route>
+            </Switch>
+      )}
+          chat={<h3>chat</h3>}
+        />
+      </Route>
     </Switch>
   ) : (
     <Switch>
       <Route exact path="/register" component={RegisterPage} />
       <Route path="/" component={LoginPage} />
     </Switch>
-  ));
+  );
 
   return (
     <ThemeProvider theme={theme}>
