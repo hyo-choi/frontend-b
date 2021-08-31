@@ -18,6 +18,7 @@ import RegisterPage from './components/pages/RegisterPage/RegisterPage';
 import MainTemplate from './components/templates/MainTemplate/MainTemplate';
 import MFARegisterPage from './components/pages/MFARegisterPage/MFARegisterPage';
 import MFAPage from './components/pages/MFAPage/MFAPage';
+import CommunityPage from './components/pages/CommunityPage/CommunityPage';
 import ProfilePage from './components/pages/ProfilePage/ProfilePage';
 
 const useStyles = makeStyles({
@@ -97,6 +98,7 @@ const App = () => {
               <Route exact path="/">
                 <Redirect to="/game" />
               </Route>
+              <Route path="/community" component={CommunityPage} />
               <Route path="/profile/:username" component={ProfilePage} />
               <Route exact path="/profile">
                 <Redirect to={`/profile/${userState.name}`} />

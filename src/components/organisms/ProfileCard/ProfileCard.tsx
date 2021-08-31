@@ -22,7 +22,66 @@ const useStyles = makeStyles({
   button: {
     width: '6.5em',
   },
+  '@keyframes loading': {
+    '0%': {
+      backgroundColor: 'rgba(165, 165, 165, 0.1)',
+    },
+    '50%': {
+      backgroundColor: 'rgba(165, 165, 165, 0.3)',
+    },
+    '100%': {
+      backgroundColor: 'rgba(165, 165, 165, 0.1)',
+    },
+  },
+  skeleton: {
+    animation: '$loading 1.8s infinite ease-in-out',
+  },
+  skeletonCard: {
+    padding: '0.5em',
+    width: '100%',
+    height: '100px',
+  },
+  skeletonAvatar: {
+    width: '72px',
+    height: '72px',
+    borderRadius: '36px',
+  },
+  skeletonTypo: {
+    margin: '5px',
+    width: '90%',
+    height: '20px',
+  },
+  skeletonButton: {
+    margin: '0.25em',
+    padding: '5px 15px',
+    borderRadius: '4px',
+    width: '61px',
+    height: '26px',
+  },
 });
+
+export const ProfileCardSkeleton = () => {
+  const classes = useStyles();
+  return (
+    <Grid className={classes.skeletonCard} item container justifyContent="space-around" alignItems="center">
+      <Grid item container justifyContent="space-around" alignItems="center" xs={5}>
+        <Grid container item xs={6} justifyContent="center">
+          <div className={`${classes.skeletonAvatar} ${classes.skeleton}`}>{}</div>
+        </Grid>
+        <Grid item xs={6}>
+          <div className={`${classes.skeletonTypo} ${classes.skeleton}`}> </div>
+          <div className={`${classes.skeletonTypo} ${classes.skeleton}`}> </div>
+        </Grid>
+      </Grid>
+      <Grid item container justifyContent="flex-end" alignItems="center" xs={7}>
+        <div className={`${classes.skeletonButton} ${classes.skeleton}`}> </div>
+        <div className={`${classes.skeletonButton} ${classes.skeleton}`}> </div>
+        <div className={`${classes.skeletonButton} ${classes.skeleton}`}> </div>
+        <div className={`${classes.skeletonButton} ${classes.skeleton}`}> </div>
+      </Grid>
+    </Grid>
+  );
+};
 
 type ProfileCardProps = {
   userInfo: RelatedInfoType,
@@ -344,8 +403,8 @@ const ProfileCard = ({
       return array;
     }
     if (friendButton) array.push(friendButton);
-    if (profile) array.push(blockButton);
-    return array.concat(otherButtons);
+    if (profile || relationship === 'BLOCKING') array.push(blockButton);
+    return relationship === 'NONE' ? otherButtons : array.concat(otherButtons);
   };
 
   const Buttons = buttonArray().map((button) => (
