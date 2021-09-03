@@ -39,17 +39,20 @@ const useStyles = makeStyles({
 type ListProps = {
   height?: string,
   scroll?: boolean,
+  reverse?: boolean,
   children?: React.ReactNode,
 };
 
-const List = ({ height, scroll, children }: ListProps) => {
+const List = ({
+  height, scroll, reverse, children,
+}: ListProps) => {
   const classes = useStyles({ height, scroll } as StyleProps);
   return (
     <Grid
       item
       container
       className={classes.root}
-      direction="column"
+      direction={reverse ? 'column-reverse' : 'column'}
       justifyContent="flex-start"
       alignItems="stretch"
       wrap="nowrap"
@@ -68,6 +71,7 @@ const List = ({ height, scroll, children }: ListProps) => {
 List.defaultProps = {
   height: '25vh',
   scroll: false,
+  reverse: false,
   children: null,
 };
 
