@@ -40,7 +40,7 @@ const UserList = ({ type }: ListProps) => {
   const path = type === 'all' ? makeAPIPath('/users') : makeAPIPath(`/${type}`);
   const relationship = relationships[type];
   const [users, setUsers] = useState<RelatedInfoType[]>([]);
-  const [isListEnd, setListEnd] = useState(false);
+  const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(1);
   const {
     isOpen, setOpen, dialog, setDialog,
@@ -86,13 +86,15 @@ const UserList = ({ type }: ListProps) => {
         .then(({ data }: { data: RawUserInfoType[] }) => {
           const typed: UserInfoType[] = data;
           setUsers((prev) => prev.concat(typed.map((oneUser) => ({ ...oneUser, avatar: makeAPIPath(`/${oneUser.avatar}`), relationship: 'REQUESTED' }))));
+          setListEnd(false);
         })
         .catch((error) => {
           source.cancel();
           toast.error(error.message);
           setListEnd(true);
         });
-    }
+    } else setListEnd(false);
+
     return () => {
       source.cancel();
       setUsers([]);
@@ -121,28 +123,27 @@ const UserList = ({ type }: ListProps) => {
           />
         </ListItem>
       ))}
+      {!isListEnd && (
       <div
         style={{ display: 'flex', justifyContent: 'center', marginTop: '4px' }}
-        hidden={isListEnd}
         ref={isListEnd ? null : setRef as React.LegacyRef<HTMLDivElement>}
       >
-        {!isListEnd && (
-          <Grid
-            item
-            container
-            direction="column"
-            justifyContent="flex-start"
-            alignItems="stretch"
-            wrap="nowrap"
-            spacing={1}
-            xs={12}
-          >
-            <ListItem><ProfileCardSkeleton /></ListItem>
-            <ListItem><ProfileCardSkeleton /></ListItem>
-            <ListItem><ProfileCardSkeleton /></ListItem>
-          </Grid>
-        )}
+        <Grid
+          item
+          container
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="stretch"
+          wrap="nowrap"
+          spacing={1}
+          xs={12}
+        >
+          <ListItem><ProfileCardSkeleton /></ListItem>
+          <ListItem><ProfileCardSkeleton /></ListItem>
+          <ListItem><ProfileCardSkeleton /></ListItem>
+        </Grid>
       </div>
+      )}
     </>
   );
 };

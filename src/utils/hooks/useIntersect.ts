@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 const baseOption = {
   root: null,
-  threshold: 0.8,
+  threshold: 0.3,
   rootMargin: '0px',
 };
 
