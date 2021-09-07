@@ -34,11 +34,6 @@ const useStyles = makeStyles({
   skeleton: {
     animation: '$loading 1.8s infinite ease-in-out',
   },
-  skeletonCard: {
-    padding: '0.2em',
-    width: '100%',
-    height: '60px',
-  },
   skeletonIcon: {
     width: '36px',
     height: '36px',
@@ -62,7 +57,7 @@ export const ChannelListItemSkeleton = () => {
   const classes = useStyles();
   return (
     <ListItem>
-      <Grid className={`${classes.skeletonCard} ${classes.skeleton}`} item container justifyContent="space-around" alignItems="center">
+      <Grid className={`${classes.root}`} item container justifyContent="space-around" alignItems="center">
         <Grid item container justifyContent="center" alignItems="center" xs={2}>
           <div className={`${classes.skeletonTypo} ${classes.skeleton}`}> </div>
         </Grid>
