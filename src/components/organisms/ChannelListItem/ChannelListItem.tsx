@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import Badge from '@material-ui/core/Badge';
 import Typo from '../../atoms/Typo/Typo';
+import { DialogProps } from '../../../utils/hooks/useDialog';
 import ListItem from '../../atoms/ListItem/ListItem';
-import { ChannelType } from '../../../types/Chat';
+import { MembershipRole, ChannelType } from '../../../types/Chat';
 import Button from '../../atoms/Button/Button';
 
 const useStyles = makeStyles({
@@ -67,7 +68,7 @@ export const ChannelListItemSkeleton = () => {
         <Grid item container justifyContent="center" alignItems="center" xs={1}>
           <div className={`${classes.skeletonIcon} ${classes.skeleton}`}> </div>
         </Grid>
-        <Grid item container justifyContent="center" alignItems="center" xs={4}>
+        <Grid item container justifyContent="flex-end" alignItems="center" xs={4}>
           <div className={`${classes.skeletonButton} ${classes.skeleton}`}> </div>
         </Grid>
       </Grid>
@@ -75,38 +76,39 @@ export const ChannelListItemSkeleton = () => {
   );
 };
 
-type ChannelListItemProps = ChannelType;
+// FIXME: API구현되고 나서 Dialog, setOpen 구현하기
+type ChannelListItemProps = {
+  info: ChannelType,
+  // eslint-disable-next-line no-unused-vars
+  setOpen: (value: boolean) => void,
+  // eslint-disable-next-line no-unused-vars
+  setDialog: (value: DialogProps) => void,
+};
 
 const makeDateString = (date: Date) => `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 
 const ChannelListItem = ({
-  name, role, unreads, isLocked, updatedAt,
+  // eslint-disable-next-line no-unused-vars
+  info, setOpen, setDialog,
 }: ChannelListItemProps) => {
+  const {
+    name, role, unreads, isLocked, updatedAt,
+  } = info;
   const dateStr = makeDateString(updatedAt);
   const classes = useStyles();
-  const JoinButton = () => (<Button onClick={() => {}}>Join</Button>);
-  const ManageButton = () => (<Button onClick={() => {}}>Manage</Button>);
-  const OpenButton = () => (<Button onClick={() => {}}>Open</Button>);
+  const JoinButton = () => (<Button variant="outlined" onClick={() => {}}>채널 가입</Button>);
+  const ManageButton = () => (<Button variant="outlined" onClick={() => {}}>채널 관리</Button>);
+  const GoChatButton = () => (<Button variant="outlined" onClick={() => {}}>채팅 참가</Button>);
 
-  const Buttons = (opt: 'OWNER' | 'ADMIN' | 'MEMBER' | 'NONE') => {
+  const Buttons = (opt: MembershipRole) => {
     switch (opt) {
       case 'MEMBER':
         return (
           <Grid item>
-            <OpenButton />
+            <GoChatButton />
           </Grid>
         );
       case 'OWNER':
-        return (
-          <>
-            <Grid item>
-              <ManageButton />
-            </Grid>
-            <Grid item>
-              <OpenButton />
-            </Grid>
-          </>
-        );
       case 'ADMIN':
         return (
           <>
@@ -114,10 +116,11 @@ const ChannelListItem = ({
               <ManageButton />
             </Grid>
             <Grid item>
-              <OpenButton />
+              <GoChatButton />
             </Grid>
           </>
         );
+      case 'NONE':
       default:
         return (<JoinButton />);
     }
@@ -138,7 +141,7 @@ const ChannelListItem = ({
         <Grid item container justifyContent="center" alignItems="center" xs={1}>
           { isLocked ? <LockIcon fontSize="medium" /> : undefined }
         </Grid>
-        <Grid item container justifyContent="center" alignItems="center" xs={4}>
+        <Grid item container justifyContent="flex-end" alignItems="center" xs={4}>
           { Buttons(role) }
         </Grid>
       </Grid>

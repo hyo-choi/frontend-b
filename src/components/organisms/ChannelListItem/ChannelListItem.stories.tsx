@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import ChannelListItem, { ChannelListItemSkeleton } from './ChannelListItem';
+import { ChannelType } from '../../../types/Chat';
 import List from '../../atoms/List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 import { ContextProvider } from '../../../utils/hooks/useContext';
@@ -12,15 +13,19 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  const role = 'NONE';
+  const channelInfo0: ChannelType = {
+    name: '채팅 할 사람~',
+    role: 'NONE',
+    unreads: 0,
+    isLocked: true,
+    updatedAt: new Date(),
+  };
 
   return (
     <ChannelListItem
-      name="채팅하실분"
-      role={role}
-      unreads={0}
-      isLocked
-      updatedAt={new Date()}
+      info={channelInfo0}
+      setOpen={() => {}}
+      setDialog={() => {}}
     />
   );
 };
@@ -30,61 +35,111 @@ export const SkeletonChannel = () => (
 );
 
 export const WithList = () => {
-  const role0 = 'NONE';
-  const role1 = 'MEMBER';
-  const role2 = 'ADMIN';
-  const role3 = 'OWNER';
+  const channelInfo1: ChannelType = {
+    name: '내가 만든 공개방',
+    role: 'OWNER',
+    unreads: 10,
+    isLocked: false,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo2: ChannelType = {
+    name: '내가 ADMIN인 공개방',
+    role: 'ADMIN',
+    unreads: 5,
+    isLocked: false,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo3: ChannelType = {
+    name: '내가 만든 비공개방',
+    role: 'OWNER',
+    unreads: 42,
+    isLocked: true,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo4: ChannelType = {
+    name: '내가 ADMIN인 비공개방',
+    role: 'ADMIN',
+    unreads: 2,
+    isLocked: true,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo5: ChannelType = {
+    name: '내가 멤버인 공개방',
+    role: 'MEMBER',
+    unreads: 0,
+    isLocked: false,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo6: ChannelType = {
+    name: '내가 멤버인 비공개방',
+    role: 'MEMBER',
+    unreads: 10,
+    isLocked: true,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo7: ChannelType = {
+    name: '아직 join이 안된 공개방',
+    role: 'NONE',
+    unreads: 0,
+    isLocked: false,
+    updatedAt: new Date(),
+  };
+
+  const channelInfo8: ChannelType = {
+    name: '아직 join이 안된 비공개방',
+    role: 'NONE',
+    unreads: 0,
+    isLocked: true,
+    updatedAt: new Date(),
+  };
 
   return (
     <List scroll height="70vh">
       <ChannelListItem
-        name="친구들만 와라"
-        isLocked
-        role={role0}
-        unreads={1}
-        updatedAt={new Date()}
+        info={channelInfo1}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="아무나 이야기 나눠요! ADMIN 어디갔냐 빨리다시들어와"
-        isLocked={false}
-        role={role2}
-        unreads={5}
-        updatedAt={new Date()}
+        info={channelInfo2}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="내가 만든 비밀 채널방"
-        isLocked
-        role={role3}
-        unreads={0}
-        updatedAt={new Date()}
+        info={channelInfo3}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="공개 채팅하실분 빨리 가입 고고"
-        isLocked={false}
-        role={role1}
-        unreads={11}
-        updatedAt={new Date()}
+        info={channelInfo4}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="내가 만든 공개 채팅방"
-        isLocked={false}
-        role={role3}
-        unreads={0}
-        updatedAt={new Date()}
+        info={channelInfo5}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="Ykoh님의 비공개채팅"
-        isLocked
-        role={role0}
-        unreads={1}
-        updatedAt={new Date()}
+        info={channelInfo6}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
       <ChannelListItem
-        name="Ykoh님의 공개채팅"
-        isLocked
-        role={role0}
-        unreads={1}
-        updatedAt={new Date()}
+        info={channelInfo7}
+        setOpen={() => {}}
+        setDialog={() => {}}
+      />
+      <ChannelListItem
+        info={channelInfo8}
+        setOpen={() => {}}
+        setDialog={() => {}}
       />
     </List>
   );
