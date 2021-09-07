@@ -1,5 +1,7 @@
 import { UserInfoType } from './User';
 
+export type MembershipRole = 'ADMIN' | 'OWNER' | 'MEMBER' | 'NONE';
+
 export type MessageType = { // 서버의 'message' 이벤트가 emit
   name: string, // channel이나 dm 상대의 name
   id: string, // message의 id
@@ -10,7 +12,7 @@ export type MessageType = { // 서버의 'message' 이벤트가 emit
 
 export type ChannelType = {
   name: string,
-  role: 'OWNER' | 'ADMIN' | 'MEMBER' | 'NONE',
+  role: MembershipRole,
   unreads: number,
   isLocked: boolean,
   updatedAt: Date,
