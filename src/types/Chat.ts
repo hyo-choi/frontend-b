@@ -2,12 +2,20 @@ import { UserInfoType } from './User';
 
 export type MembershipRole = 'ADMIN' | 'OWNER' | 'MEMBER' | 'NONE';
 
-export type MessageType = { // 서버의 'message' 이벤트가 emit
-  name: string, // channel이나 dm 상대의 name
-  id: string, // message의 id
-  content: string,
+export type RawChannelType = {
+  id: string,
+  name: string,
+  password: 'HIDDEN' | null,
   createdAt: Date,
+  updatedAt: Date,
+};
+
+export type MessageType = { // 서버의 'message' 이벤트가 emit
+  content: string,
   user: UserInfoType, // 나 자신일 수도 있음
+  channel: RawChannelType,
+  id: string, // message의 id
+  createdAt: Date,
 }; // FIXME TEMP
 
 export type ChannelType = {
