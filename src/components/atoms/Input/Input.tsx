@@ -18,10 +18,11 @@ export type InputProps = {
   helperText?: string,
   defaultValue?: string,
   disabled?: boolean,
+  autoComplete?: boolean,
 };
 
 const Input = ({
-  onChange, value, error, type, label, helperText, defaultValue, disabled,
+  onChange, value, error, type, label, helperText, defaultValue, disabled, autoComplete,
 }: InputProps) => (
   defaultValue ? (
     <StyledInput
@@ -32,6 +33,7 @@ const Input = ({
       helperText={helperText}
       error={error}
       disabled={disabled}
+      autoComplete={String(autoComplete)}
     />
   ) : (
     <StyledInput
@@ -42,6 +44,7 @@ const Input = ({
       helperText={helperText}
       error={error}
       disabled={disabled}
+      autoComplete={String(autoComplete)}
     />
   )
 );
@@ -54,6 +57,7 @@ Input.defaultProps = {
   defaultValue: '',
   error: false,
   disabled: false,
+  autoComplete: false,
 };
 
 export default Input;
