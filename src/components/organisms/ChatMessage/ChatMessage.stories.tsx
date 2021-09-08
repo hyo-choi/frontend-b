@@ -2,8 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Meta } from '@storybook/react';
 import Grid from '@material-ui/core/Grid/Grid';
-import { UserInfoType } from '../../../types/User';
-import { MessageType } from '../../../types/Chat';
+import { MessageType, RawChannelType } from '../../../types/Chat';
 import List from '../../atoms/List/List';
 import { ContextProvider } from '../../../utils/hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
@@ -17,7 +16,15 @@ export default {
   component: ChatMessage,
 } as Meta;
 
-const shortMessage: MessageType & { user: UserInfoType } = {
+const channel: RawChannelType = {
+  id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
+  name: 'temp',
+  password: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+const shortMessage: MessageType = {
   id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
   content: 'Lorem ipsum dolor sit amet',
   createdAt: new Date(),
@@ -27,9 +34,10 @@ const shortMessage: MessageType & { user: UserInfoType } = {
     avatar: '',
     status: 'OFFLINE',
   },
+  channel,
 };
 
-const longMessage: MessageType & { user: UserInfoType } = {
+const longMessage: MessageType = {
   id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
   content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   createdAt: new Date(),
@@ -39,6 +47,7 @@ const longMessage: MessageType & { user: UserInfoType } = {
     avatar: '',
     status: 'OFFLINE',
   },
+  channel,
 };
 
 export const Default = () => (

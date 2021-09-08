@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import SecurityRoundedIcon from '@material-ui/icons/SecurityRounded';
 import { makeStyles } from '@material-ui/core/styles';
 import { MessageType } from '../../../types/Chat';
-import { UserInfoType } from '../../../types/User';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
 import { DialogProps } from '../../../utils/hooks/useDialog';
@@ -36,7 +35,7 @@ const useStyles = makeStyles({
 });
 
 type ChatProps = {
-  info: MessageType & { user: UserInfoType }, // FIXME type 고쳐야 합니다
+  info: MessageType,
   userRole: 'OWNER' | 'ADMIN' | 'MEMBER',
   me?: boolean,
   // eslint-disable-next-line no-unused-vars
