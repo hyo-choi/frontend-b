@@ -1,6 +1,6 @@
 import { UserInfoType } from './User';
 
-export type MembershipRole = 'ADMIN' | 'OWNER' | 'MEMBER' | 'NONE';
+export type MembershipRole = 'ADMIN' | 'OWNER' | 'MEMBER' | 'NONE' | 'BANNED';
 
 export type RawChannelType = {
   id: string,
@@ -30,3 +30,11 @@ export type DMRoomType = UserInfoType & {
   latestMessage: MessageType, // FIXME API 추가되면 구현
   unreads: number,
 }; // FIXME TEMP
+
+type MembershipType = {
+  role: MembershipRole,
+  createdAt: Date,
+  mutedAt: Date | null,
+};
+
+export type MemberType = UserInfoType & { memberships: MembershipType[] };
