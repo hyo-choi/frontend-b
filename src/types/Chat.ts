@@ -26,8 +26,7 @@ export type ChannelType = {
   updatedAt: Date,
 }; // FIXME TEMP
 
-export type DMRoomType = {
-  name: string,
-  latestMessage?: MessageType, // FIXME API 추가되면 구현
+export type DMRoomType = UserInfoType & {
+  latestMessage: MessageType, // FIXME API 추가되면 구현
   unreads: number,
 }; // FIXME TEMP
