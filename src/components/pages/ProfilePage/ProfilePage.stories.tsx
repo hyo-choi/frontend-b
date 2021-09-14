@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Meta } from '@storybook/react';
 import { ToastContainer } from 'react-toastify';
-import { ContextProvider, useUserDispatch } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
+import { useUserDispatch } from '../../../utils/hooks/useUserContext';
 import ProfilePage from './ProfilePage';
 import { UserInfoType } from '../../../types/User';
 

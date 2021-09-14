@@ -3,10 +3,10 @@ import { Meta } from '@storybook/react';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import SubMenu from './SubMenu';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 import List from '../../atoms/List/List';
-import { FriendList, OneChat } from '../../atoms/ListItem/LitsItem.stories';
+import { FriendList, OneChat } from '../../atoms/ListItem/ListItem.stories';
 
 export default {
   component: SubMenu,

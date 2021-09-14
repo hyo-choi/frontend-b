@@ -3,10 +3,10 @@ import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import SecurityRoundedIcon from '@material-ui/icons/SecurityRounded';
 import { makeStyles } from '@material-ui/core/styles';
-import { MessageType } from '../../../types/Chat';
+import { MembershipRole, MessageType } from '../../../types/Chat';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
-import { DialogProps } from '../../../utils/hooks/useDialog';
+import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
 
 type StyleProps = { me: boolean };
 
@@ -36,12 +36,10 @@ const useStyles = makeStyles({
 
 type ChatProps = {
   info: MessageType,
-  userRole: 'OWNER' | 'ADMIN' | 'MEMBER',
+  userRole: MembershipRole,
   me?: boolean,
-  // eslint-disable-next-line no-unused-vars
-  setOpen: (value: boolean) => void,
-  // eslint-disable-next-line no-unused-vars
-  setDialog: (value: DialogProps) => void,
+  setOpen: SetOpenType,
+  setDialog: SetDialogType,
 };
 
 const makeDateString = (date: Date) => {

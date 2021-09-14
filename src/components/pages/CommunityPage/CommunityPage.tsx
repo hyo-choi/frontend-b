@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
-import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import List from '../../atoms/List/List';
 import ListItem from '../../atoms/ListItem/ListItem';
 import SubMenu from '../../molecules/SubMenu/SubMenu';
@@ -41,7 +40,7 @@ const UserList = ({ type }: ListProps) => {
   const relationship = relationships[type];
   const [users, setUsers] = useState<RelatedInfoType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
@@ -57,7 +56,7 @@ const UserList = ({ type }: ListProps) => {
       })
       .catch((error) => {
         source.cancel();
-        toast.error(error.message);
+        errorMessageHandler(error);
         setListEnd(true);
       });
   };
@@ -81,7 +80,7 @@ const UserList = ({ type }: ListProps) => {
           const typed: UserInfoType[] = data;
           setUsers(typed.map((oneUser) => ({ ...oneUser, avatar: makeAPIPath(`/${oneUser.avatar}`), relationship: 'REQUESTING' })));
         })
-        .catch((error) => { toast.error(error.message); });
+        .catch((error) => { errorMessageHandler(error); });
       asyncGetRequest(makeAPIPath('/friends?status=REQUESTED&me=ADDRESSEE'), source)
         .then(({ data }: { data: RawUserInfoType[] }) => {
           const typed: UserInfoType[] = data;
@@ -90,7 +89,7 @@ const UserList = ({ type }: ListProps) => {
         })
         .catch((error) => {
           source.cancel();
-          toast.error(error.message);
+          errorMessageHandler(error);
           setListEnd(true);
         });
     } else setListEnd(false);
@@ -98,7 +97,7 @@ const UserList = ({ type }: ListProps) => {
     return () => {
       source.cancel();
       setUsers([]);
-      setListEnd(false);
+      setListEnd(true);
     }; // NOTE 메모리 leak 방지 (https://stackoverflow.com/a/65007703/13614207)
   }, []);
 

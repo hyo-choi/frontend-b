@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 import LoginPage from './LoginPage';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 
 export default {
   component: LoginPage,

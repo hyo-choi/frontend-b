@@ -6,8 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '../../atoms/Button/Button';
 import Dialog from '../../molecules/Dialog/Dialog';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
-import { useAppDispatch, useUserState } from '../../../utils/hooks/useContext';
-import { makeAPIPath } from '../../../utils/utils';
+import { useUserState } from '../../../utils/hooks/useUserContext';
+import { useAppDispatch } from '../../../utils/hooks/useAppContext';
+import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import Typo from '../../atoms/Typo/Typo';
 import useDialog from '../../../utils/hooks/useDialog';
 
@@ -40,9 +41,7 @@ const MFARegisterPage = () => {
       .finally(() => { appDispatch({ type: 'endLoading' }); })
       .then((response) => response.blob())
       .then((blob) => setQRSrc(URL.createObjectURL(blob)))
-      .catch((error) => {
-        toast.error(error.message);
-      });
+      .catch((error) => { errorMessageHandler(error); });
   }, []);
 
   const buttons = (

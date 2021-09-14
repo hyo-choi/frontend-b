@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Meta } from '@storybook/react';
 import { ToastContainer } from 'react-toastify';
 import MFARegisterPage from './MFARegisterPage';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 
 export default {
   component: MFARegisterPage,

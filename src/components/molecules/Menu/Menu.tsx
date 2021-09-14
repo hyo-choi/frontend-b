@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Toolbar } from '@material-ui/core';
+import { Badge, makeStyles, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typo from '../../atoms/Typo/Typo';
 import useLogout from '../../../utils/hooks/useLogout';
+import { useAppState } from '../../../utils/hooks/useAppContext';
+import { getUnreads } from '../../../utils/channels';
 
 const useStyles = makeStyles({
   cursor: {
@@ -15,6 +17,7 @@ const useStyles = makeStyles({
 const Menu = () => {
   const classes = useStyles();
   const handleLogout = useLogout();
+  const { channels, DMs } = useAppState();
 
   const Choices = ['Game', 'DM', 'Channel', 'Community', 'Profile'];
   const RenderChoices = Choices.map((item) => (
@@ -26,7 +29,11 @@ const Menu = () => {
         style={{ textDecoration: 'none', color: 'inherit' }}
         to={`/${item.toLowerCase()}`}
       >
-        <Typo variant="h6">{item}</Typo>
+        {['Channel', 'DM'].includes(item) ? (
+          <Badge max={9} badgeContent={item === 'DM' ? getUnreads(DMs) : getUnreads(channels)} color="secondary">
+            <Typo variant="h6">{item}</Typo>
+          </Badge>
+        ) : <Typo variant="h6">{item}</Typo>}
       </NavLink>
     </Grid>
   ));

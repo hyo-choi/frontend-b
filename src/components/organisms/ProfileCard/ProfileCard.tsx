@@ -4,13 +4,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { useAppDispatch, useUserState } from '../../../utils/hooks/useContext';
+import { useUserState } from '../../../utils/hooks/useUserContext';
+import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
 import { FriendshipType, RelatedInfoType } from '../../../types/User';
 import Button from '../../atoms/Button/Button';
 import UserProfile from '../../molecules/UserProfile/UserProfile';
-import { DialogProps } from '../../../utils/hooks/useDialog';
+import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
 import UserInfoForm from '../UserInfoForm/UserInfoForm';
-import { makeAPIPath } from '../../../utils/utils';
+import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import { makeRelationship } from '../../../utils/friendships';
 
 const useStyles = makeStyles({
@@ -87,10 +88,8 @@ type ProfileCardProps = {
   userInfo: RelatedInfoType,
   // eslint-disable-next-line no-unused-vars
   setUser: (value: RelatedInfoType) => void,
-  // eslint-disable-next-line no-unused-vars
-  setOpen: (value: boolean) => void,
-  // eslint-disable-next-line no-unused-vars
-  setDialog: (value: DialogProps) => void,
+  setOpen: SetOpenType,
+  setDialog: SetDialogType,
   profile?: boolean,
 };
 
@@ -107,6 +106,7 @@ const ProfileCard = ({
   } = userInfo;
   const me = useUserState();
   const appDispatch = useAppDispatch();
+  const appState = useAppState();
   const history = useHistory();
   const classes = useStyles();
 
@@ -149,11 +149,7 @@ const ProfileCard = ({
         });
         toast(comment);
       })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message);
-        } else toast.error(error.message);
-      });
+      .catch((error) => { errorMessageHandler(error); });
     setOpen(false);
   };
 
@@ -176,11 +172,7 @@ const ProfileCard = ({
         });
         toast(comment);
       })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message);
-        } else toast.error(error.message);
-      });
+      .catch((error) => { errorMessageHandler(error); });
     setOpen(false);
   };
 
@@ -200,11 +192,7 @@ const ProfileCard = ({
         });
         toast(comment);
       })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message);
-        } else toast.error(error.message);
-      });
+      .catch((error) => { errorMessageHandler(error); });
     setOpen(false);
   };
 
@@ -337,7 +325,10 @@ const ProfileCard = ({
                   <Button
                     type="button"
                     onClick={
-                      () => handleDeleteRequest('차단 해제했습니다.', '/blocks')
+                      () => {
+                        handleDeleteRequest('차단 해제했습니다.', '/blocks');
+                        appDispatch({ type: 'renewBlockList', list: appState.blockList.filter((user) => user !== name) });
+                      }
                     }
                   >
                     confirm
@@ -360,7 +351,10 @@ const ProfileCard = ({
                   <Button variant="text" onClick={() => { setOpen(false); }}>cancel</Button>
                   <Button
                     type="button"
-                    onClick={() => handlePostRequest('해당 유저를 차단했습니다.', 'BLOCKED')}
+                    onClick={() => {
+                      handlePostRequest('해당 유저를 차단했습니다.', 'BLOCKED');
+                      appDispatch({ type: 'renewBlockList', list: appState.blockList.concat(name) });
+                    }}
                   >
                     confirm
                   </Button>
@@ -378,7 +372,7 @@ const ProfileCard = ({
       {
         text: 'DM',
         onClick: () => {
-          // TODO: API 구현 후, 추가
+          appDispatch({ type: 'enterChat', chatting: { type: 'DM', name } });
         },
       },
       {

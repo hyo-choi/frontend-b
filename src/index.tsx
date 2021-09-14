@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ContextProvider } from './utils/hooks/useContext';
 import App from './App';
+import ContextProvider from './utils/hooks/useContext';
 
 ReactDOM.render(
   <React.StrictMode>

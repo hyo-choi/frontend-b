@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import ChannelUserListItem, { ChannelUserListItemSkeleton } from './ChannelUserListItem';
 import List from '../../atoms/List/List';
 import { MemberType } from '../../../types/Chat';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 
 export default {
@@ -17,12 +17,19 @@ const dummyUserListItem: MemberType = {
   name: 'USERNAME',
   avatar: '',
   status: 'ONLINE',
-  memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: null }],
+  memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: null }],
 };
 
 export const Default = () => (
   <ContextProvider>
-    <ChannelUserListItem info={dummyUserListItem} myRole="OWNER" />
+    <ChannelUserListItem
+      info={dummyUserListItem}
+      myRole="OWNER"
+      setUser={() => {}}
+      setOpen={() => {}}
+      setDialog={() => {}}
+      channelName="dummy"
+    />
   </ContextProvider>
 );
 
@@ -35,61 +42,89 @@ const IamOwnerWithList = () => (
         info={{
           ...dummyUserListItem,
           name: 'MutedMember',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'BannedMember',
           status: 'IN_GAME',
-          memberships: [{ role: 'BANNED', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'BANNED', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember',
           status: 'OFFLINE',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'I am Admin',
-          memberships: [{ role: 'ADMIN', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'ADMIN', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember1',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember2',
           status: 'IN_GAME',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember3',
           status: 'OFFLINE',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="OWNER"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
     </List>
   </ContextProvider>
@@ -102,61 +137,89 @@ const IamAdminWithList = () => (
         info={{
           ...dummyUserListItem,
           name: 'MutedMember',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'BannedMember',
           status: 'IN_GAME',
-          memberships: [{ role: 'BANNED', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'BANNED', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember0',
           status: 'OFFLINE',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'I am OWNER',
-          memberships: [{ role: 'OWNER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'OWNER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember1',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember2',
           status: 'IN_GAME',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
       <ChannelUserListItem
         info={{
           ...dummyUserListItem,
           name: 'generalMember3',
           status: 'OFFLINE',
-          memberships: [{ role: 'MEMBER', createdAt: new Date(), mutedAt: new Date() }],
+          memberships: [{ role: 'MEMBER', createdAt: (new Date()).toString(), unmutedAt: (new Date()).toString() }],
         }}
         myRole="ADMIN"
+        setUser={() => {}}
+        setOpen={() => {}}
+        setDialog={() => {}}
+        channelName="dummy"
       />
     </List>
   </ContextProvider>

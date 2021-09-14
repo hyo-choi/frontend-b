@@ -10,7 +10,7 @@ import Dialog from '../../molecules/Dialog/Dialog';
 import UserInfoForm from '../../organisms/UserInfoForm/UserInfoForm';
 import useDialog from '../../../utils/hooks/useDialog';
 import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
-import { useAppDispatch } from '../../../utils/hooks/useContext';
+import { useAppDispatch } from '../../../utils/hooks/useAppContext';
 
 const useStyles = makeStyles({
   root: {

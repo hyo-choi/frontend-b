@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import GameOptionCard from './GameOptionCard';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 
 export default {
   title: 'molecules/GameOptionCard',

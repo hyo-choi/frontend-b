@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
@@ -8,6 +9,7 @@ import { DMRoomType } from '../../../types/Chat';
 import Avatar from '../../atoms/Avatar/Avatar';
 import { UserStatusType } from '../../../types/User';
 import Button from '../../atoms/Button/Button';
+import { useAppDispatch } from '../../../utils/hooks/useAppContext';
 
 type StyleProps = { status: UserStatusType };
 
@@ -15,7 +17,7 @@ const useStyles = makeStyles({
   root: {
     padding: '0.2em',
     width: '100%',
-    height: '60px',
+    height: '65px',
   },
   status: {
     color: (props: StyleProps) => {
@@ -137,21 +139,22 @@ const makeDateString = (date: Date) => {
   return '방금 전';
 };
 
-const handleClickToProfile = () => {
-  // FIXME: 해당 유저의 프로필로
-};
-
-const handleClickToDM = () => {
-  // FIXME: 해당 유저의 DM chat 입장
-};
-
-// NOTE: 처음 대화일 경우, latestMessage가 없음: avatar와 status를 가져오기 위해 latestMessage 활성화 가정 코드
 const DMListItem = ({ roomInfo }: DMListItemProps) => {
   const {
     name, avatar, status, latestMessage, unreads,
   } = roomInfo;
   const { content, createdAt } = latestMessage;
+  const history = useHistory();
+  const appDispatch = useAppDispatch();
   const classes = useStyles({ status });
+
+  const handleClickToProfile = () => {
+    history.push(`/profile/${name}`);
+  };
+
+  const handleClickToDM = () => {
+    appDispatch({ type: 'enterChat', chatting: { type: 'DM', name } });
+  };
 
   const dateStr = () => {
     const dateString = makeDateString(createdAt);

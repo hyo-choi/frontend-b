@@ -5,7 +5,7 @@ import DMListItem, { DMListItemSkeleton } from './DMListItem';
 import { DMRoomType } from '../../../types/Chat';
 import List from '../../atoms/List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import { ContextProvider } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
 
 export default {
   title: 'organisms/DMListItem',
@@ -18,19 +18,14 @@ const ShortMessageDMRoomInfo: DMRoomType = {
   avatar: '',
   status: 'OFFLINE',
   latestMessage: {
+    type: 'DM',
+    name: 'USERNAME',
     content: 'Lorem ips',
     user: {
       id: '550e8400-e29b-41d4-a716-446655440000',
       name: 'USERNAME',
       avatar: '',
       status: 'OFFLINE',
-    },
-    channel: {
-      id: '550e8400-e29b-41d4-a716-446655440000',
-      name: 'DEFAULT CHANNEL NAME',
-      password: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     },
     id: '550e8400-e29b-41d4-a716-446655440000',
     createdAt: new Date(),

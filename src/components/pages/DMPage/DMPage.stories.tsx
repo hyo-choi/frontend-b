@@ -1,16 +1,17 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter } from 'react-router-dom';
-import MFAPage from './MFAPage';
+import DMPage from './DMPage';
 import ContextProvider from '../../../utils/hooks/useContext';
+import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 
 export default {
-  component: MFAPage,
-  title: 'pages/MFAPage',
+  component: DMPage,
+  title: 'pages/DMPage',
 } as Meta;
 
-export const Login = () => (
+export const Default = () => (
   <BrowserRouter>
     <ContextProvider>
       <ToastContainer
@@ -24,7 +25,10 @@ export const Login = () => (
         draggable
         pauseOnHover
       />
-      <MFAPage />
+      <MainTemplate
+        main={<Route path="/" component={DMPage} />}
+        chat={<h1>chat</h1>}
+      />
     </ContextProvider>
   </BrowserRouter>
 );

@@ -1,4 +1,5 @@
 import axios, { CancelTokenSource } from 'axios';
+import { toast } from 'react-toastify';
 
 const makeAPIPath = (path: string): string => (`${process.env.REACT_APP_API_URL}${path}`);
 
@@ -10,4 +11,10 @@ const asyncGetRequest = async (url: string, source?: CancelTokenSource) => {
   return response;
 };
 
-export { makeAPIPath, asyncGetRequest };
+const errorMessageHandler = (error: any) => {
+  if (error.response?.data?.message) {
+    toast.error(error.response.data.message[0]);
+  } else toast.error(error.message);
+};
+
+export { makeAPIPath, asyncGetRequest, errorMessageHandler };

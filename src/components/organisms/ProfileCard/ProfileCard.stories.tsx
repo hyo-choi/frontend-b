@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ContextProvider, useUserDispatch } from '../../../utils/hooks/useContext';
+import ContextProvider from '../../../utils/hooks/useContext';
+import { useUserDispatch } from '../../../utils/hooks/useUserContext';
 import ProfileCard, { ProfileCardSkeleton } from './ProfileCard';
 import { RelatedInfoType } from '../../../types/User';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
