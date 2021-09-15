@@ -12,14 +12,11 @@ const useStyles = makeStyles({
     height: '35vh',
     '&:hover': { color: '#208fea' },
   },
-  cardActionMargin: {
-    marginTop: '1em',
-  },
   image: {
     width: '100%',
     height: '15vh',
     objectFit: 'contain',
-    paddingTop: '2em',
+    paddingTop: '3em',
     filter: 'opacity(.5) drop-shadow(0 0 0 blue)',
     '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 blue)',
   },
@@ -114,7 +111,7 @@ const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
   };
 
   return (
-    <CardActionArea onClick={onClick} className={classes.cardActionMargin}>
+    <CardActionArea onClick={onClick}>
       <Card className={classes.card}>
         { ChooseOption(option) }
       </Card>

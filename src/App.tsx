@@ -30,6 +30,7 @@ import { DMToMessage, messageToMessage } from './utils/chats';
 import ChannelManagePage from './components/pages/ChannelManagePage/ChannelManagePage';
 import DMPage from './components/pages/DMPage/DMPage';
 import { RawUserInfoType } from './types/Response';
+import GamePage from './components/pages/GamePage/GamePage';
 
 const useStyles = makeStyles({
   progress: {
@@ -185,6 +186,7 @@ const App = () => {
               <Route exact path="/">
                 <Redirect to="/game" />
               </Route>
+              <Route path="/game" component={GamePage} />
               <Route path="/community" component={CommunityPage} />
               <Route path="/channel/manage/:channelName" component={ChannelManagePage} />
               <Route path="/channel" component={ChannelPage} />
