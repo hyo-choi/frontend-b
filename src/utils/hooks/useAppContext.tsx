@@ -61,9 +61,11 @@ const newMessageReducer = (state: AppStateType, message: MessageType): AppStateT
     });
   } else if (state.DMs.some((dmRoom) => dmRoom.name === message.name)) { // 기존 DM
     ret.DMs = state.DMs.map((dmRoom: DMRoomType) => {
-      if (dmRoom.name === message.name && dmRoom.name !== state.chatting?.name) {
-        return { ...dmRoom, unreads: dmRoom.unreads + 1, latestMessage: message };
-      } return { ...dmRoom, unreads: 0, latestMessage: message };
+      if (dmRoom.name === message.name) { // 나와 dm 상대방의 dm방에 도착한 dm
+        if (dmRoom.name !== state.chatting?.name) { // 열려있는 채팅일때
+          return { ...dmRoom, unreads: dmRoom.unreads + 1, latestMessage: message };
+        } return { ...dmRoom, unreads: 0, latestMessage: message }; // 열려있지 않은 채팅일때
+      } return { ...dmRoom };
     });
   } else { // 처음 받거나 보낸 DM
     let userInfo : UserInfoType | null = null;
