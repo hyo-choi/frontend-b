@@ -65,6 +65,8 @@ const DM_INIT : MessageType = {
 };
 
 const App = () => {
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
   const theme = unstable_createMuiStrictModeTheme();
   const appState = useAppState();
   const appDispatch = useAppDispatch();
@@ -121,7 +123,7 @@ const App = () => {
   useEffect(() => {
     axios.defaults.withCredentials = true;
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath('/users/me'))
+    asyncGetRequest(makeAPIPath('/users/me'), source)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -140,19 +142,24 @@ const App = () => {
             isSecondFactorAuthenticated,
           },
         });
-        if (enable2FA && !authenticatorSecret) history.push('/register/2fa');
-        else if (enable2FA && !isSecondFactorAuthenticated) history.push('/2fa');
+        if (enable2FA && !authenticatorSecret) {
+          history.push('/register/2fa');
+          throw new Error('2FA');
+        } else if (enable2FA && !isSecondFactorAuthenticated) {
+          history.push('/2fa');
+          throw new Error('2FA');
+        }
         appDispatch({ type: 'loading' });
-        return (asyncGetRequest(makeAPIPath('/blocks')));
+        return (asyncGetRequest(makeAPIPath('/blocks'), source));
       })
       .then(({ data }: { data: RawUserInfoType[] }) => {
         const list = data.map((user) => user.name);
         appDispatch({ type: 'renewBlockList', list });
-        return (asyncGetRequest(makeAPIPath('/channels/me')));
+        return (asyncGetRequest(makeAPIPath('/channels/me'), source));
       })
       .then(({ data }) => {
         setChannels(data.map((channel: RawChannelType) => makeChannelInfo(channel)));
-        return (asyncGetRequest(makeAPIPath('/dmers')));
+        return (asyncGetRequest(makeAPIPath('/dmers'), source));
       })
       .then(({ data }) => {
         setDMs(data.map((dm: RawUserInfoType): DMRoomType => ({
@@ -165,14 +172,22 @@ const App = () => {
         })));
       })
       .catch((error) => {
-        if (error.response) {
+        if (error?.message === '2FA') {
+          // eslint-disable-next-line no-console
+          console.log('2fa');
+        } else if (error.response) {
           userDispatch({ type: 'reset' });
         } else {
           toast.error(error.message);
         }
       });
 
-    return () => appDispatch({ type: 'disconnect' });
+    return () => {
+      source.cancel();
+      setChannels([]);
+      setDMs([]);
+      appDispatch({ type: 'disconnect' });
+    };
   }, []);
 
   const children = userState.id ? (

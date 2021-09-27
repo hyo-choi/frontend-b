@@ -103,7 +103,9 @@ const MFAPage = () => {
             isSecondFactorAuthenticated,
           },
         });
-        history.replace('/');
+        appDispatch({ type: 'loading' });
+        history.push('/');
+        window.location.reload();
       })
       .catch((error) => {
         if (error.response) toast.error('인증 번호가 잘못되었습니다.');
