@@ -119,7 +119,12 @@ const MFAPage = () => {
           <main className={classes.inputs}>{Inputs}</main>
         </Grid>
       )}
-      button={<Button onClick={handleClick}>2FA 인증</Button>}
+      button={(
+        <>
+          <Button variant="outlined" onClick={() => setInputs(['', '', '', '', '', ''])}>RESET</Button>
+          <Button onClick={handleClick}>2FA 인증</Button>
+        </>
+      )}
     />
   );
 };
