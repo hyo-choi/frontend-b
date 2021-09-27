@@ -12,7 +12,7 @@ import ListItem from '../../atoms/ListItem/ListItem';
 import { ChannelType } from '../../../types/Chat';
 import Button from '../../atoms/Button/Button';
 import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
-import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { errorMessageHandler, makeAPIPath, makeDateString } from '../../../utils/utils';
 import { useUserState } from '../../../utils/hooks/useUserContext';
 import Input from '../../atoms/Input/Input';
 
@@ -93,8 +93,6 @@ type ChannelJoinFormProps = {
   info: ChannelType,
   setOpen: SetOpenType,
 };
-
-const makeDateString = (date: Date) => `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 
 const ChannelJoinForm = ({ info, setOpen }: ChannelJoinFormProps) => {
   const { name, isLocked } = info;

@@ -33,12 +33,13 @@ const MatchList = ({ type }: ListProps) => {
 
     asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}${typePath}`, source)
       .then(({ data }: { data: RawMatchType[] }) => {
-        const typed: MatchType[] = data;
-        setMatches((prev) => prev.concat(typed.map((match) => ({
+        const typed: MatchType[] = data.map((match) => ({
           ...match,
+          createdAt: new Date(match.createdAt),
           user1: { ...match.user1, avatar: makeAPIPath(`/${match.user1.avatar}`) },
           user2: { ...match.user2, avatar: makeAPIPath(`/${match.user2.avatar}`) },
-        }))));
+        }));
+        setMatches((prev) => prev.concat(typed));
         if (data.length === 0 || data.length < COUNTS_PER_PAGE) setListEnd(true);
       })
       .catch((error) => {

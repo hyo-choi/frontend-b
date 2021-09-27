@@ -17,4 +17,8 @@ const errorMessageHandler = (error: any) => {
   } else toast.error(error.message);
 };
 
-export { makeAPIPath, asyncGetRequest, errorMessageHandler };
+const makeDateString = (date: Date) => `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+
+export {
+  makeAPIPath, asyncGetRequest, errorMessageHandler, makeDateString,
+};
