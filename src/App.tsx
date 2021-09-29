@@ -74,16 +74,21 @@ const App = () => {
   const userDispatch = useUserDispatch();
   const classes = useStyles();
   const history = useHistory();
+  const [userInfo, setUserInfo] = useState<RawUserInfoType | null>(null);
   const [channels, setChannels] = useState<ChannelType[]>([]);
   const [DMs, setDMs] = useState<DMRoomType[]>([]);
 
   useEffect(() => {
-    if (userState.id) {
+    if (userInfo) {
       const socket = io(String(process.env.REACT_APP_API_URL)!, {
-        query: { userId: userState.id },
+        query: { userId: userInfo.id },
       });
       socket.on('connect', () => {
         appDispatch({ type: 'connect', socket });
+        userDispatch({
+          type: 'login',
+          info: { ...userInfo, avatar: makeAPIPath(`/${userInfo.avatar}`) },
+        });
         channels.forEach((channel) => socket.emit('joinRoom', { id: channel.id }));
         appDispatch({ type: 'join', channels, DMs });
         appDispatch({ type: 'endLoading' });
@@ -94,7 +99,7 @@ const App = () => {
         });
 
         socket.on('dm', (data: RawDMType) => {
-          const message = DMToMessage(data, userState.name);
+          const message = DMToMessage(data, userInfo.name);
           appDispatch({ type: 'newMessage', message });
         });
 
@@ -129,19 +134,9 @@ const App = () => {
       })
       .then(({ data }) => {
         const {
-          id, name, avatar, enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
+          enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
         } = data;
-        userDispatch({
-          type: 'login',
-          info: {
-            id,
-            name,
-            avatar: makeAPIPath(`/${avatar}`),
-            enable2FA,
-            authenticatorSecret,
-            isSecondFactorAuthenticated,
-          },
-        });
+        setUserInfo(data);
         if (enable2FA && !authenticatorSecret) {
           history.push('/register/2fa');
           throw new Error('2FA');
@@ -185,6 +180,7 @@ const App = () => {
     return () => {
       source.cancel();
       setChannels([]);
+      setUserInfo(null);
       setDMs([]);
       appDispatch({ type: 'disconnect' });
     };
