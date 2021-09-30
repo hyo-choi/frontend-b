@@ -17,6 +17,12 @@ export enum AchievementDescription {
   FIRST_BLOCK = 'You made your first hater.',
 }
 
+export type RawAchievementType = {
+  name: AchievementName,
+  description: AchievementDescription,
+  createdAt: string,
+};
+
 export type AchievementType = {
   name: AchievementName,
   description: AchievementDescription,
