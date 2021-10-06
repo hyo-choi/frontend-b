@@ -3,39 +3,43 @@ import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import PlayerProfile, { UserGameInfoType } from './PlayerProfile';
+import PlayerProfile from './PlayerProfile';
 import ContextProvider from '../../../utils/hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 import Typo from '../../atoms/Typo/Typo';
+import { UserInfoType } from '../../../types/User';
 
 export default {
   title: 'organisms/PlayerProfile',
   component: PlayerProfile,
 } as Meta;
 
-const dummyUserGameInfo: UserGameInfoType = {
+const dummyUserGameInfo: UserInfoType = {
   id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
   name: 'USERNAME',
   avatar: '',
   status: 'OFFLINE',
+  score: 0,
   win: 0,
   lose: 0,
 };
 
-const jikangGameInfo: UserGameInfoType = {
+const jikangGameInfo: UserInfoType = {
   id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
   name: 'Jikang',
   avatar: 'https://cdn.intra.42.fr/users/medium_jikang.jpg',
   status: 'IN_GAME',
+  score: 0,
   win: 4,
   lose: 2,
 };
 
-const fakeUserGameInfo: UserGameInfoType = {
+const fakeUserGameInfo: UserInfoType = {
   id: '550e8400-e29b-41d4-a716-446655440000', // 의미없는 uuid입니다
   name: 'ABCDEFGHIJK',
   avatar: 'https://cdn.intra.42.fr/users/medium_default.png',
   status: 'IN_GAME',
+  score: 0,
   win: 40,
   lose: 20,
 };

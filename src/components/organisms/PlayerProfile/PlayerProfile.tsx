@@ -1,16 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import ListItem from '../../atoms/ListItem/ListItem';
 import { UserInfoType } from '../../../types/User';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
-
-// FIXME: 임시 Type 작성
-export type UserGameInfoType = UserInfoType & { win: number, lose: number };
+import { makeMatchHistoryString } from '../../../utils/utils';
 
 type PlayerProfileProps = {
-  userGameInfo: UserGameInfoType,
+  userGameInfo: UserInfoType,
 };
 
 const useStyles = makeStyles({
@@ -23,28 +20,18 @@ const useStyles = makeStyles({
 
 const PlayerProfile = ({ userGameInfo }: PlayerProfileProps) => {
   const {
-    name, avatar, win, lose,
+    name, avatar, score, win, lose,
   } = userGameInfo;
   const classes = useStyles();
 
-  const makeMatchHistoryString = (): string => (`전적 ${win}승 ${lose}패`);
-
   return (
-    <ListItem>
-      <Grid className={classes.root} item container justifyContent="center" alignItems="center">
-        <Grid item container justifyContent="center" alignItems="center" xs={12}>
-          <Avatar src={avatar} alt={name} />
-        </Grid>
-        <Grid item container justifyContent="center" alignItems="center" xs={12}>
-          <Typo variant="body1">{name}</Typo>
-        </Grid>
-        <Grid item container justifyContent="center" alignItems="center" xs={12}>
-          <Typo variant="body2">
-            {makeMatchHistoryString()}
-          </Typo>
-        </Grid>
-      </Grid>
-    </ListItem>
+    <Grid className={classes.root} item container xs={12} direction="column" justifyContent="center" alignItems="center">
+      <Avatar src={avatar} alt={name} />
+      <Typo variant="body1">{name}</Typo>
+      <Typo variant="body2">
+        {makeMatchHistoryString(score!, win!, lose!)}
+      </Typo>
+    </Grid>
   );
 };
 

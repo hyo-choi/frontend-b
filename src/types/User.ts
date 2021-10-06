@@ -40,6 +40,9 @@ export type UserInfoType = {
   name: string,
   avatar: string,
   status: UserStatusType,
+  win?: number,
+  lose?: number,
+  score?: number,
 };
 
 /**

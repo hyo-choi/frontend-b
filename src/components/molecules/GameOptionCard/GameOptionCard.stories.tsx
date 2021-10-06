@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const Watch = () => <Grid xs={4}><GameOptionCard option="watch" onClick={() => {}} /></Grid>;
+export const Watch = () => <Grid xs={4}><GameOptionCard option="WATCH" onClick={() => {}} /></Grid>;
 
 export const WithMainTemplate = () => {
   const classes = useStyles();
@@ -33,18 +33,18 @@ export const WithMainTemplate = () => {
             <>
               <Grid container justifyContent="space-evenly" alignItems="center" spacing={1}>
                 <Grid item xs={6}>
-                  <GameOptionCard option="classic" onClick={() => {}} />
+                  <GameOptionCard option="CLASSIC" onClick={() => {}} />
                 </Grid>
                 <Grid item xs={6}>
-                  <GameOptionCard option="speed" onClick={() => {}} />
+                  <GameOptionCard option="SPEED" onClick={() => {}} />
                 </Grid>
               </Grid>
               <Grid container justifyContent="space-evenly" alignItems="center" spacing={1}>
                 <Grid item xs={6}>
-                  <GameOptionCard option="reverse" onClick={() => {}} />
+                  <GameOptionCard option="REVERSE" onClick={() => {}} />
                 </Grid>
                 <Grid item xs={6}>
-                  <GameOptionCard option="watch" onClick={() => {}} />
+                  <GameOptionCard option="WATCH" onClick={() => {}} />
                 </Grid>
               </Grid>
             </>

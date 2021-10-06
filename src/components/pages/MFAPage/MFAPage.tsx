@@ -4,9 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useUserDispatch, useUserState } from '../../../utils/hooks/useUserContext';
+import { useUserDispatch } from '../../../utils/hooks/useUserContext';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import { makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
+import { RawUserInfoType } from '../../../types/Response';
 import Button from '../../atoms/Button/Button';
 import DigitInput from '../../atoms/DigitInput/DigitInput';
 import Typo from '../../atoms/Typo/Typo';
@@ -32,21 +33,37 @@ const usePrevious = (value: DigitString[]) => {
 };
 
 const MFAPage = () => {
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
   const [inputs, setInputs] = useState<DigitString[]>(['', '', '', '', '', '']);
   const refs = inputs.map(() => useRef<HTMLInputElement | HTMLTextAreaElement>(null));
   const appDispatch = useAppDispatch();
   const userDispatch = useUserDispatch();
   const history = useHistory();
-  const userState = useUserState();
   const prevInputs = usePrevious(inputs);
   const classes = useStyles();
 
   useEffect(() => {
-    const { enable2FA, authenticatorSecret, isSecondFactorAuthenticated } = userState;
-    if (!enable2FA || (enable2FA && authenticatorSecret && isSecondFactorAuthenticated)) {
-      toast.error('잘못된 접근입니다.');
-      history.replace('/');
-    }
+    appDispatch({ type: 'loading' });
+    asyncGetRequest(makeAPIPath('/users/me'), source)
+      .finally(() => {
+        appDispatch({ type: 'endLoading' });
+      })
+      .then(({ data }: { data: RawUserInfoType }) => {
+        const {
+          enable2FA, authenticatorSecret, isSecondFactorAuthenticated,
+        } = data;
+        if (!enable2FA || (enable2FA && authenticatorSecret && isSecondFactorAuthenticated)) {
+          toast.error('잘못된 접근입니다.');
+          history.replace('/');
+        }
+      })
+      .catch(() => {
+        source.cancel();
+        history.replace('/');
+      });
+
+    return () => source.cancel();
   }, []);
 
   useEffect(() => {

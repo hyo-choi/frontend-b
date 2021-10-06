@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
@@ -18,6 +19,7 @@ import useIntersect from '../../../utils/hooks/useIntersect';
 import { DMToMessage, messageToMessage } from '../../../utils/chats';
 import Button from '../../atoms/Button/Button';
 import { getMembership } from '../../../utils/channels';
+import { PLAY_PATH } from '../../../utils/path';
 
 const COUNTS_PER_PAGE = 20;
 
@@ -34,11 +36,12 @@ const ChatPage = () => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
   const userState = useUserState();
+  const container = useRef<HTMLDivElement>(null);
   const [chats, setChats] = useState<MessageType[]>([]);
   const [chat, setChat] = useState<string>('');
   const [isChatEnd, setChatEnd] = useState(false);
   const [page, setPage] = useState<number>(0);
-  const [isSending, setSending] = useState<boolean>(false);
+  const isSending = useRef<boolean>(false);
   const [members, setMembers] = useState<MemberType[]>([]);
   const {
     chatting, newMessage, blockList,
@@ -47,6 +50,7 @@ const ChatPage = () => {
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
+  const location = useLocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChat(e.target.value);
@@ -54,11 +58,16 @@ const ChatPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (chat.length === 0 || isSending) return;
+    if (chat.length === 0 || isSending.current) return;
 
+    isSending.current = true;
     (chatting?.type === 'channel' ? postChannelChat(chatting!.name, chat) : postDM(chatting!.name, chat))
-      .then(() => { setSending(true); })
-      .catch((error) => { errorMessageHandler(error); });
+      .finally(() => setChat(''))
+      .then(() => {})
+      .catch((error) => {
+        isSending.current = false;
+        errorMessageHandler(error);
+      });
   };
 
   const fetchItems = () => {
@@ -83,10 +92,11 @@ const ChatPage = () => {
 
   useEffect(() => {
     setChats([]);
-    setSending(false);
+    isSending.current = false;
     setChat('');
     setPage(chatting ? 1 : 0);
     setChatEnd(!chatting);
+    source.cancel();
     if (chatting && chatting.type === 'channel') {
       asyncGetRequest(makeAPIPath(`/channels/${chatting.name}/members`))
         .then(({ data }) => { setMembers(data); })
@@ -99,13 +109,13 @@ const ChatPage = () => {
   }, [page]);
 
   useEffect(() => {
-    if (isSending && newMessage) {
+    if (isSending.current && newMessage) {
       if (newMessage.user.id === userState.id) {
-        setSending(false);
+        isSending.current = false;
         setChat('');
       }
     }
-  }, [isSending]);
+  }, [isSending.current]);
 
   useEffect(() => {
     if (newMessage) {
@@ -113,12 +123,16 @@ const ChatPage = () => {
     }
   }, [newMessage]);
 
+  useEffect(() => {
+    if (location.pathname === PLAY_PATH) setOpen(false);
+  }, [location.pathname]);
+
   useEffect(() => () => {
     source.cancel();
     setChats([]);
     setMembers([]);
     setChatEnd(true);
-    setSending(false);
+    isSending.current = false;
   }, []);
 
   // eslint-disable-next-line no-unused-vars
@@ -137,6 +151,7 @@ const ChatPage = () => {
         content={dialog.content}
         buttons={dialog.buttons}
         onClose={dialog.onClose}
+        container={() => container.current}
       />
       <Grid container justifyContent="space-between" alignItems="center">
         <Typo variant="h6">{chatting?.name || '참여중인 채팅이 없습니다'}</Typo>
@@ -144,7 +159,7 @@ const ChatPage = () => {
       </Grid>
       {chatting ? (
         <>
-          <List height="70vh" reverse scroll>
+          <List height="70vh" ref={container} reverse scroll>
             {chats.map((one) => (chatting.type === 'channel' && blockList.includes(one.user.name) ? <></>
               : (
                 <ChatMessage
@@ -177,7 +192,7 @@ const ChatPage = () => {
             )}
           </List>
           <ChatInput value={chat} onChange={handleChange} onSubmit={handleSubmit} />
-          <LinearProgress style={{ visibility: isSending ? 'visible' : 'hidden' }} />
+          <LinearProgress style={{ visibility: isSending.current ? 'visible' : 'hidden' }} />
         </>
       )
         : (

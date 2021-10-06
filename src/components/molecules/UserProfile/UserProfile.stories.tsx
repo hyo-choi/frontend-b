@@ -15,9 +15,12 @@ export const Default: Story<RelatedInfoType> = ({ status }: RelatedInfoType) => 
     avatar: '',
     status,
     relationship: 'NONE',
+    score: 0,
+    win: 0,
+    lose: 0,
   };
 
-  return <UserProfile userInfo={userInfo} />;
+  return <UserProfile profile userInfo={userInfo} />;
 };
 
 Default.args = {

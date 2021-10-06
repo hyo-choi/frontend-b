@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Typo from '../../atoms/Typo/Typo';
+import { GameModeType } from '../../../types/Match';
 
 const useStyles = makeStyles({
   card: {
@@ -25,10 +26,8 @@ const useStyles = makeStyles({
   },
 });
 
-type GameOptionType = 'classic' | 'speed' | 'reverse' | 'watch';
-
 type GameOptionCardProps = {
-  option: GameOptionType,
+  option: GameModeType | 'WATCH',
   onClick: React.MouseEventHandler<HTMLButtonElement>,
 };
 
@@ -96,15 +95,15 @@ const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
     />
   );
 
-  const ChooseOption = (opt: GameOptionType) => {
+  const ChooseOption = (opt: GameModeType | 'WATCH') => {
     switch (opt) {
-      case 'watch':
+      case 'WATCH':
         return (<WatchGame />);
-      case 'speed':
+      case 'SPEED':
         return (<SpeedGame />);
-      case 'reverse':
+      case 'REVERSE':
         return (<ReverseGame />);
-      case 'classic':
+      case 'CLASSIC':
       default:
         return (<ClassicGame />);
     }

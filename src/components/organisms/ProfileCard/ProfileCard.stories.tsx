@@ -27,6 +27,9 @@ export const OthersProfile = () => {
     avatar: '',
     status: 'OFFLINE',
     relationship: 'NONE',
+    score: 0,
+    win: 0,
+    lose: 0,
   };
 
   return (
@@ -105,6 +108,9 @@ export const OthersList = () => {
     avatar: '',
     status: 'OFFLINE',
     relationship: 'NONE',
+    score: 0,
+    win: 0,
+    lose: 0,
   };
 
   return (
@@ -192,6 +198,9 @@ const ProfileCardWithContext = () => {
     avatar: '',
     status: 'ONLINE',
     relationship: 'NONE',
+    score: 0,
+    win: 0,
+    lose: 0,
   };
 
   useEffect(() => {

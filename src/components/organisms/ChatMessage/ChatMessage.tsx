@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import SecurityRoundedIcon from '@material-ui/icons/SecurityRounded';
@@ -7,6 +8,10 @@ import { MembershipRole, MessageType } from '../../../types/Chat';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
 import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
+import Button from '../../atoms/Button/Button';
+import { makeMatchHistoryString } from '../../../utils/utils';
+import useMatch from '../../../utils/hooks/useMatch';
+import { PLAY_PATH } from '../../../utils/path';
 
 type StyleProps = { me: boolean };
 
@@ -54,13 +59,53 @@ const ChatMessage = ({
   info, userRole, me = false, setOpen, setDialog,
 }: ChatProps) => {
   const { user } = info;
+  const {
+    id, name, avatar, score, win, lose,
+  } = user;
+  const { inviteUser } = useMatch(setOpen, setDialog);
   const classes = useStyles({ me });
+  const history = useHistory();
+  const location = useLocation();
+
+  const handleMatchChoice = () => {
+    setDialog({
+      title: '매치 초대',
+      content: (
+        <Grid container direction="column" justifyContent="center" alignItems="center">
+          <Typo gutterBottom>초대할 게임 모드를 선택해주세요.</Typo>
+          <Grid item container justifyContent="center" alignItems="center">
+            <Button variant="outlined" onClick={() => inviteUser('CLASSIC', id)}>CLASSIC</Button>
+            <Button variant="outlined" onClick={() => inviteUser('SPEED', id)}>SPEED</Button>
+            <Button variant="outlined" onClick={() => inviteUser('REVERSE', id)}>REVERSE</Button>
+          </Grid>
+        </Grid>),
+      buttons: <Button variant="text" onClick={() => { setOpen(false); }}>close</Button>,
+      onClose: () => setOpen(false),
+    });
+    setOpen(true);
+  };
+
+  const handleProfileClick = () => {
+    history.push(`/profile/${name}`);
+    setOpen(false);
+  };
+
   const handleClick = () => {
     setDialog({
-      title: 'Menu',
-      content: 'temp chat menu',
+      content: (
+        <Grid container direction="column" justifyContent="center" alignItems="center">
+          <Avatar size="large" alt={name} src={avatar} />
+          <Typo variant="h5">{name}</Typo>
+          <Typo variant="body2" gutterBottom>
+            {makeMatchHistoryString(score!, win!, lose!)}
+          </Typo>
+          <Button variant="outlined" onClick={handleProfileClick}>프로필 페이지</Button>
+          {location.pathname !== PLAY_PATH && <Button variant="outlined" onClick={handleMatchChoice}>매치 초대하기</Button>}
+        </Grid>
+      ),
+      buttons: <Button variant="text" onClick={() => { setOpen(false); }}>close</Button>,
       onClose: () => setOpen(false),
-    }); // FIXME 유저 메뉴 고쳐야 합니다
+    });
     setOpen(true);
   };
 

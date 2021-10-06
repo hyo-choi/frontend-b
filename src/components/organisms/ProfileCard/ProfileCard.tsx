@@ -13,6 +13,8 @@ import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
 import UserInfoForm from '../UserInfoForm/UserInfoForm';
 import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import { makeRelationship } from '../../../utils/friendships';
+import Typo from '../../atoms/Typo/Typo';
+import useMatch from '../../../utils/hooks/useMatch';
 
 const useStyles = makeStyles({
   root: {
@@ -104,6 +106,7 @@ const ProfileCard = ({
   const {
     id, name, relationship,
   } = userInfo;
+  const { inviteUser } = useMatch(setOpen, setDialog);
   const me = useUserState();
   const appDispatch = useAppDispatch();
   const appState = useAppState();
@@ -378,7 +381,21 @@ const ProfileCard = ({
       {
         text: '매치 초대',
         onClick: () => {
-          // TODO: API 구현 후, 추가
+          setDialog({
+            title: '매치 초대',
+            content: (
+              <Grid container direction="column" justifyContent="center" alignItems="center">
+                <Typo gutterBottom>초대할 게임 모드를 선택해주세요.</Typo>
+                <Grid item container>
+                  <Button variant="outlined" onClick={() => inviteUser('CLASSIC', id)}>CLASSIC</Button>
+                  <Button variant="outlined" onClick={() => inviteUser('SPEED', id)}>SPEED</Button>
+                  <Button variant="outlined" onClick={() => inviteUser('REVERSE', id)}>REVERSE</Button>
+                </Grid>
+              </Grid>),
+            buttons: <Button variant="text" onClick={() => { setOpen(false); }}>cancel</Button>,
+            onClose: () => { setOpen(false); },
+          });
+          setOpen(true);
         },
       },
     ];

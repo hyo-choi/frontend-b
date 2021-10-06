@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {
+  Redirect, Route, Switch, useLocation,
+} from 'react-router-dom';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
@@ -157,20 +159,23 @@ const list = [
   { name: 'BLOCKED USER', link: BLOCKED_PATH },
 ];
 
-const CommunityPage = () => (
-  <>
-    <SubMenu current={window.location.pathname} list={list} />
-    <List height="78vh" scroll>
-      <Switch>
-        <Route exact path={FRIEND_PATH} component={FriendList} />
-        <Route exact path={BLOCKED_PATH} component={BlockList} />
-        <Route exact path={ALL_PATH} component={AllList} />
-        <Route path="/">
-          <Redirect to={FRIEND_PATH} />
-        </Route>
-      </Switch>
-    </List>
-  </>
-);
+const CommunityPage = () => {
+  const location = useLocation();
+  return (
+    <>
+      <SubMenu current={location.pathname} list={list} />
+      <List height="78vh" scroll>
+        <Switch>
+          <Route exact path={FRIEND_PATH} component={FriendList} />
+          <Route exact path={BLOCKED_PATH} component={BlockList} />
+          <Route exact path={ALL_PATH} component={AllList} />
+          <Route path="/">
+            <Redirect to={FRIEND_PATH} />
+          </Route>
+        </Switch>
+      </List>
+    </>
+  );
+};
 
 export default CommunityPage;

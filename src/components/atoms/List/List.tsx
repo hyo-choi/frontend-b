@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ForwardedRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typo from '../Typo/Typo';
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     margin: '0.5em auto',
     backgroundColor: '#eee',
     borderRadius: '10px',
-    padding: '5px',
+    padding: '5px !important',
     overflowX: 'hidden',
     overflowY: (props: StyleProps) => (props.scroll ? 'auto' : 'hidden'),
     '&::-webkit-scrollbar': {
@@ -43,14 +43,16 @@ type ListProps = {
   children?: React.ReactNode,
 };
 
-const List = ({
+const List = React.forwardRef(({
   height, scroll, reverse, children,
-}: ListProps) => {
+}: ListProps, ref?: ForwardedRef<HTMLDivElement>) => {
   const classes = useStyles({ height, scroll } as StyleProps);
   return (
     <Grid
       item
       container
+      ref={ref || null}
+      style={{ position: 'relative' }}
       className={classes.root}
       direction={reverse ? 'column-reverse' : 'column'}
       justifyContent="flex-start"
@@ -66,7 +68,7 @@ const List = ({
       )}
     </Grid>
   );
-};
+});
 
 List.defaultProps = {
   height: '25vh',

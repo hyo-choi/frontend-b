@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {
+  Redirect, Route, Switch, useLocation,
+} from 'react-router-dom';
 import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
-import { RawMatchType, MatchType } from '../../../types/Match';
+import { RawMatchType, MatchType, GameModeType } from '../../../types/Match';
 import List from '../../atoms/List/List';
 import SubMenu from '../../molecules/SubMenu/SubMenu';
 import useIntersect from '../../../utils/hooks/useIntersect';
 import GameListItem, { GameListItemSkeleton } from '../../organisms/GameListItem/GameListItem';
+import { useAppState } from '../../../utils/hooks/useAppContext';
+import useMatch from '../../../utils/hooks/useMatch';
+import { DialogProps } from '../../../utils/hooks/useDialog';
+import { useGameDispatch } from '../../../utils/hooks/useGameContext';
 
 const ALL_MATCH_PATH = '/game/watch/all';
 const LADDER_MATCH_PATH = '/game/watch/ladder';
@@ -19,19 +25,38 @@ type ListProps = {
   type: 'ALL' | 'LADDER' | 'EXHIBITION',
 }
 
+// eslint-disable-next-line no-unused-vars
+const dummySetOpen = (value: boolean) => {};
+// eslint-disable-next-line no-unused-vars
+const dummySetDialog = (value: DialogProps) => {};
+
 const MatchList = ({ type }: ListProps) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = makeAPIPath('/matches/spectating');
+  const path = makeAPIPath('/matches?status=IN_PROGRESS');
   const typePath = type === 'ALL' ? '' : `&type=${type}`;
+  const { socket } = useAppState();
+  const gameDispatch = useGameDispatch();
+  const { handleReady } = useMatch(dummySetOpen, dummySetDialog);
   const [matches, setMatches] = useState<MatchType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
 
+  const handleWatch = (mode: GameModeType, matchId: string) => {
+    gameDispatch({
+      type: 'setGame',
+      mode,
+      gameType: 'EXHIBITION',
+      isPlayer: false,
+    });
+    socket?.emit('watchMatch', { id: matchId });
+    socket?.on('ready', handleReady);
+  };
+
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}${typePath}`, source)
+    asyncGetRequest(`${path}&perPage=${COUNTS_PER_PAGE}&page=${page}${typePath}`, source)
       .then(({ data }: { data: RawMatchType[] }) => {
         const typed: MatchType[] = data.map((match) => ({
           ...match,
@@ -65,6 +90,7 @@ const MatchList = ({ type }: ListProps) => {
     setListEnd(false);
 
     return () => {
+      socket?.off('ready');
       source.cancel();
       setMatches([]);
       setListEnd(true);
@@ -79,7 +105,7 @@ const MatchList = ({ type }: ListProps) => {
           leftUser={match.user1}
           rightUser={match.user2}
           mode={match.mode}
-          onClick={() => {}}
+          onClick={() => handleWatch(match.mode, match.id)}
         />
       ))}
       {!isListEnd && (
@@ -117,20 +143,23 @@ const list = [
   { name: 'EXHIBITION', link: EXHIBITION_MATCH_PATH },
 ];
 
-const GameWatchPage = () => (
-  <>
-    <SubMenu current={window.location.pathname} list={list} />
-    <List height="78vh" scroll>
-      <Switch>
-        <Route exact path={ALL_MATCH_PATH} component={AllMatchList} />
-        <Route exact path={LADDER_MATCH_PATH} component={LadderList} />
-        <Route exact path={EXHIBITION_MATCH_PATH} component={ExhibitionList} />
-        <Route path="/">
-          <Redirect to={ALL_MATCH_PATH} />
-        </Route>
-      </Switch>
-    </List>
-  </>
-);
+const GameWatchPage = () => {
+  const location = useLocation();
+  return (
+    <>
+      <SubMenu current={location.pathname} list={list} />
+      <List height="78vh" scroll>
+        <Switch>
+          <Route exact path={ALL_MATCH_PATH} component={AllMatchList} />
+          <Route exact path={LADDER_MATCH_PATH} component={LadderList} />
+          <Route exact path={EXHIBITION_MATCH_PATH} component={ExhibitionList} />
+          <Route path="/">
+            <Redirect to={ALL_MATCH_PATH} />
+          </Route>
+        </Switch>
+      </List>
+    </>
+  );
+};
 
 export default GameWatchPage;

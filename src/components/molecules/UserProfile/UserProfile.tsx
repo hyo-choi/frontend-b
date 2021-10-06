@@ -6,6 +6,7 @@ import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import { RelatedInfoType, UserStatusType } from '../../../types/User';
 import Avatar from '../../atoms/Avatar/Avatar';
 import Typo from '../../atoms/Typo/Typo';
+import { makeMatchHistoryString } from '../../../utils/utils';
 
 type StyleProps = { status: UserStatusType };
 
@@ -40,7 +41,7 @@ export type UserProfileProps = {
 
 const UserProfile = ({ userInfo, profile }: UserProfileProps) => {
   const {
-    name, avatar, status, relationship,
+    name, avatar, status, relationship, score, win, lose,
   } = userInfo;
   const classes = useStyles({ status });
 
@@ -77,13 +78,10 @@ const UserProfile = ({ userInfo, profile }: UserProfileProps) => {
       <Grid item xs={6}>
         <Typo variant={profile ? 'h5' : 'h6'}>{name}</Typo>
         <Typo className={classes.status}>{makeStatusString()}</Typo>
-        {profile && (
-        <Typo
-          variant="body2"
-          // FIXME: game 관련 정보가 fix되면 수정해야 합니다.
-        >
-          n점 / n승 n패 (임시)
-        </Typo>
+        {(profile && score !== undefined) && (
+          <Typo variant="body2">
+            {makeMatchHistoryString(score!, win!, lose!)}
+          </Typo>
         )}
       </Grid>
     </Grid>

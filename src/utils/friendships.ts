@@ -20,7 +20,7 @@ const makeRelationship = (isMeRequester: boolean, status: FriendshipType): Relat
 
 const makeRelatedInfo = (me: MyInfoType, rawData: RawRelatedInfoType): RelatedInfoType => {
   const {
-    id, name, avatar, status, friendship,
+    id, name, avatar, status, friendship, score, win, lose,
   } = rawData;
   const result: RelatedInfoType = {
     id,
@@ -28,6 +28,9 @@ const makeRelatedInfo = (me: MyInfoType, rawData: RawRelatedInfoType): RelatedIn
     avatar: makeAPIPath(`/${avatar}`),
     status,
     relationship: 'NONE',
+    score,
+    win,
+    lose,
   };
 
   if (!friendship) return result;

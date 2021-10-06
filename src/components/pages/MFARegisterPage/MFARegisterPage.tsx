@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,9 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '../../atoms/Button/Button';
 import Dialog from '../../molecules/Dialog/Dialog';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
-import { useUserState } from '../../../utils/hooks/useUserContext';
+import { RawUserInfoType } from '../../../types/Response';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import Typo from '../../atoms/Typo/Typo';
 import useDialog from '../../../utils/hooks/useDialog';
 
@@ -20,28 +21,37 @@ const useStyles = makeStyles({
 });
 
 const MFARegisterPage = () => {
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
   const [QRImageSrc, setQRSrc] = useState<string>('');
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
   const classes = useStyles();
   const appDispatch = useAppDispatch();
-  const { enable2FA, authenticatorSecret } = useUserState();
   const history = useHistory();
 
   useEffect(() => {
-    if (!enable2FA || (enable2FA && authenticatorSecret)) {
-      toast.error('잘못된 접근입니다.');
-      history.replace('/');
-    }
-
     appDispatch({ type: 'loading' });
-
-    fetch(makeAPIPath('/auth/otp/qrcode'), { credentials: 'include' })
+    asyncGetRequest(makeAPIPath('/users/me'), source)
+      .then(({ data }: { data: RawUserInfoType }) => {
+        const { enable2FA, authenticatorSecret } = data;
+        if (!enable2FA || (enable2FA && authenticatorSecret)) {
+          toast.error('잘못된 접근입니다.');
+          history.replace('/');
+        }
+        return fetch(makeAPIPath('/auth/otp/qrcode'), { credentials: 'include' });
+      })
       .finally(() => { appDispatch({ type: 'endLoading' }); })
       .then((response) => response.blob())
       .then((blob) => setQRSrc(URL.createObjectURL(blob)))
-      .catch((error) => { errorMessageHandler(error); });
+      .catch((error) => {
+        source.cancel();
+        errorMessageHandler(error);
+        history.replace('/');
+      });
+
+    return () => source.cancel();
   }, []);
 
   const buttons = (

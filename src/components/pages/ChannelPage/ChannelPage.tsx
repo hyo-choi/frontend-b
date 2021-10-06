@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {
+  Redirect, Route, Switch, useLocation,
+} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
@@ -137,6 +139,7 @@ const AllList = () => <ChannelList type="all" />;
 
 const ChannelPage = () => {
   const classes = useStyles();
+  const location = useLocation();
   const { isOpen, setOpen } = useDialog();
 
   return (
@@ -149,7 +152,7 @@ const ChannelPage = () => {
       />
       <Grid container>
         <Grid item container justifyContent="center" xs={10}>
-          <SubMenu current={window.location.pathname} list={list} />
+          <SubMenu current={location.pathname} list={list} />
         </Grid>
         <Grid item container justifyContent="flex-end" xs={2}>
           <Button className={classes.button} variant="outlined" onClick={() => setOpen(true)}>채널 개설</Button>

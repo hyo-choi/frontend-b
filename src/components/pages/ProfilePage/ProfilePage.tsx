@@ -41,7 +41,7 @@ type MatchParams = {
 const MatchHistory = ({ username }: UserNameType) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = makeAPIPath(`/matches/${username}`);
+  const path = makeAPIPath(`/users/${username}/matches`);
   const [matchHistories, setMatchHistories] = useState<MatchType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
@@ -176,7 +176,9 @@ const AchievementList = ({ username }: UserNameType) => {
 };
 
 const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
-  const [user, setUser] = useState<RelatedInfoType>(initialUserInfo);
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
+  const [user, setUser] = useState<RelatedInfoType | null>(initialUserInfo);
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
@@ -191,16 +193,17 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
       friendship: initialRawFriendInfo,
     };
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath(`/users/${username}`))
+    asyncGetRequest(makeAPIPath(`/users/${username}`), source)
       .then(({ data }) => {
         Object.assign(userInfo, data);
         return (
-          asyncGetRequest(makeAPIPath(`/friendships/${username}`))
+          asyncGetRequest(makeAPIPath(`/friendships/${username}`), source)
             .then((response) => {
               Object.assign(userInfo.friendship, response.data);
               setUser(makeRelatedInfo(me, userInfo));
             })
             .catch((error) => {
+              source.cancel();
               if (error.response && [404, 409].includes(error.response.status)) {
                 userInfo.friendship = null;
                 setUser(makeRelatedInfo(me, userInfo));
@@ -208,6 +211,7 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
             }));
       })
       .catch((error) => {
+        source.cancel();
         if (error.response && error.response.status >= 400 && error.response.status < 500) {
           history.push('/404');
         } else {
@@ -217,9 +221,14 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       });
-  }, []);
 
-  return (
+    return () => {
+      source.cancel();
+      setUser(null);
+    };
+  }, [username]);
+
+  return user ? (
     <>
       <Dialog
         isOpen={isOpen}
@@ -252,7 +261,7 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
         </Grid>
       </Grid>
     </>
-  );
+  ) : <></>;
 };
 
 export default ProfilePage;

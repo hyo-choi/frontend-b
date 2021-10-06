@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Switch, Route, Redirect, useHistory,
+  Switch, Route, Redirect, useHistory, useLocation,
 } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
@@ -31,6 +31,9 @@ import ChannelManagePage from './components/pages/ChannelManagePage/ChannelManag
 import DMPage from './components/pages/DMPage/DMPage';
 import { RawUserInfoType } from './types/Response';
 import GamePage from './components/pages/GamePage/GamePage';
+import Dialog from './components/molecules/Dialog/Dialog';
+import useDialog from './utils/hooks/useDialog';
+import useMatch from './utils/hooks/useMatch';
 
 const useStyles = makeStyles({
   progress: {
@@ -74,9 +77,14 @@ const App = () => {
   const userDispatch = useUserDispatch();
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [userInfo, setUserInfo] = useState<RawUserInfoType | null>(null);
   const [channels, setChannels] = useState<ChannelType[]>([]);
   const [DMs, setDMs] = useState<DMRoomType[]>([]);
+  const {
+    isOpen, setOpen, dialog, setDialog,
+  } = useDialog();
+  const { handleInvited } = useMatch(setOpen, setDialog);
 
   useEffect(() => {
     if (userInfo) {
@@ -116,10 +124,14 @@ const App = () => {
             channels: appState.channels.map((channel) => (
               channel.name === name ? { ...channel, role: 'MEMBER' } : { ...channel })),
           });
-          if (window.location.pathname === `/channel/manage/${encodeURI(name)}`) {
+          if (location.pathname === `/channel/manage/${encodeURI(name)}`) {
             history.push('/channel');
             toast.warn(`${name} 채널의 권한이 관리자에서 멤버로 변경되었습니다.`);
           }
+        });
+
+        socket.on('invitedToMatch', ({ mode, opponent, opponentSocketId }) => {
+          handleInvited(mode, opponent, opponentSocketId, socket);
         });
       });
     }
@@ -187,37 +199,46 @@ const App = () => {
   }, []);
 
   const children = userState.id ? (
+    <>
+      <Dialog
+        title={dialog.title}
+        content={dialog.content}
+        buttons={dialog.buttons}
+        isOpen={isOpen}
+        onClose={dialog.onClose}
+      />
+      <Switch>
+        <Route path="/">
+          <MainTemplate
+            main={(
+              <Switch>
+                <Route exact path="/">
+                  <Redirect to="/game" />
+                </Route>
+                <Route path="/game" component={GamePage} />
+                <Route path="/community" component={CommunityPage} />
+                <Route path="/channel/manage/:channelName" component={ChannelManagePage} />
+                <Route path="/channel" component={ChannelPage} />
+                <Route path="/profile/:username" component={ProfilePage} />
+                <Route exact path="/dm" component={DMPage} />
+                <Route exact path="/profile">
+                  <Redirect to={`/profile/${userState.name}`} />
+                </Route>
+                <Route exact path="/404" render={() => <h1>404 Not found</h1>} />
+                <Route path="/">
+                  <Redirect to="/404" />
+                </Route>
+              </Switch>
+      )}
+            chat={<ChatPage />}
+          />
+        </Route>
+      </Switch>
+    </>
+  ) : (
     <Switch>
       <Route exact path="/register/2fa" component={MFARegisterPage} />
       <Route exact path="/2fa" component={MFAPage} />
-      <Route path="/">
-        <MainTemplate
-          main={(
-            <Switch>
-              <Route exact path="/">
-                <Redirect to="/game" />
-              </Route>
-              <Route path="/game" component={GamePage} />
-              <Route path="/community" component={CommunityPage} />
-              <Route path="/channel/manage/:channelName" component={ChannelManagePage} />
-              <Route path="/channel" component={ChannelPage} />
-              <Route path="/profile/:username" component={ProfilePage} />
-              <Route exact path="/dm" component={DMPage} />
-              <Route exact path="/profile">
-                <Redirect to={`/profile/${userState.name}`} />
-              </Route>
-              <Route exact path="/404" render={() => <h1>404 Not found</h1>} />
-              <Route path="/">
-                <Redirect to="/404" />
-              </Route>
-            </Switch>
-      )}
-          chat={<ChatPage />}
-        />
-      </Route>
-    </Switch>
-  ) : (
-    <Switch>
       <Route exact path="/register" component={RegisterPage} />
       <Route path="/" component={LoginPage} />
     </Switch>

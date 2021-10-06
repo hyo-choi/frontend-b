@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   cursor: {
     cursor: 'pointer',
   },
+  root: {
+    paddingRight: '0 !important',
+  },
 });
 
 const Menu = () => {
@@ -45,7 +48,7 @@ const Menu = () => {
   );
 
   return (
-    <AppBar>
+    <AppBar className={classes.root}>
       <Toolbar>
         <Grid container>
           <Link to="/game" style={{ textDecoration: 'none', color: 'inherit' }}>

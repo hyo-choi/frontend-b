@@ -19,6 +19,8 @@ const errorMessageHandler = (error: any) => {
 
 const makeDateString = (date: Date) => `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 
+const makeMatchHistoryString = (score: number, win: number, lose: number): string => (`${score}점 / ${win}승 ${lose}패`);
+
 export {
-  makeAPIPath, asyncGetRequest, errorMessageHandler, makeDateString,
+  makeAPIPath, asyncGetRequest, errorMessageHandler, makeDateString, makeMatchHistoryString,
 };

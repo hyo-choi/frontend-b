@@ -9,28 +9,47 @@ type DialogProps = {
   content: React.ReactNode,
   buttons?: React.ReactNode,
   isOpen: boolean,
+  container?: HTMLElement | React.Component | (() => (React.ReactInstance | null)),
   // eslint-disable-next-line no-unused-vars
   onClose: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void,
 };
 
 const Dialog = ({
-  title, content, buttons, isOpen, onClose,
+  title, content, buttons, isOpen, onClose, container,
 }: DialogProps) => (
-  <MaterialDialog
-    open={isOpen}
-    onClose={onClose}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    {title && <DialogTitle>{title}</DialogTitle>}
-    <DialogContent>{content}</DialogContent>
-    <DialogActions>{buttons}</DialogActions>
-  </MaterialDialog>
+  container ? (
+    <MaterialDialog
+      open={isOpen}
+      onClose={onClose}
+      container={container || document.body}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      style={{ position: 'absolute' }}
+      BackdropProps={{ style: { position: 'absolute' } }}
+      fullWidth
+    >
+      {title && <DialogTitle>{title}</DialogTitle>}
+      <DialogContent>{content}</DialogContent>
+      <DialogActions>{buttons}</DialogActions>
+    </MaterialDialog>
+  ) : (
+    <MaterialDialog
+      open={isOpen}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      {title && <DialogTitle>{title}</DialogTitle>}
+      <DialogContent>{content}</DialogContent>
+      <DialogActions>{buttons}</DialogActions>
+    </MaterialDialog>
+  )
 );
 
 Dialog.defaultProps = {
   title: null,
   buttons: null,
+  container: null,
 };
 
 export default Dialog;

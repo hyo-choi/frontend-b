@@ -16,6 +16,9 @@ export type RawUserInfoType = {
   enable2FA: boolean,
   authenticatorSecret: boolean,
   isSecondFactorAuthenticated: boolean,
+  win?: number,
+  lose?: number,
+  score?: number,
 };
 
 export const initialRawUserInfo: RawUserInfoType = {
