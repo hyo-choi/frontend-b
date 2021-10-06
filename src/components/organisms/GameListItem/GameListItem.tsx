@@ -21,14 +21,23 @@ const useStyles = makeStyles({
   },
   classic: {
     filter: 'opacity(.5) drop-shadow(0 0 0 blue)',
+    '@supports ( -moz-appearance:none )': {
+      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem blue)',
+    },
     '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 blue)',
   },
   reverse: {
     filter: 'opacity(.5) drop-shadow(0 0 0 red)',
+    '@supports ( -moz-appearance:none )': {
+      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem red)',
+    },
     '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 red)',
   },
   speed: {
     filter: 'opacity(.5) drop-shadow(0 0 0 yellow)',
+    '@supports ( -moz-appearance:none )': {
+      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem yellow)',
+    },
     '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 yellow)',
   },
   '@keyframes loading': {

@@ -19,6 +19,9 @@ const useStyles = makeStyles({
     objectFit: 'contain',
     paddingTop: '3em',
     filter: 'opacity(.5) drop-shadow(0 0 0 blue)',
+    '@supports ( -moz-appearance:none )': {
+      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem blue)',
+    },
     '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 blue)',
   },
   marginBottom: {
