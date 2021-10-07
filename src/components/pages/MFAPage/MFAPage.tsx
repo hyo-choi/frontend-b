@@ -6,12 +6,13 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useUserDispatch } from '../../../utils/hooks/useUserContext';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import { RawUserInfoType } from '../../../types/Response';
 import Button from '../../atoms/Button/Button';
 import DigitInput from '../../atoms/DigitInput/DigitInput';
 import Typo from '../../atoms/Typo/Typo';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
+import useError from '../../../utils/hooks/useError';
 
 const useStyles = makeStyles({
   inputs: {
@@ -39,13 +40,14 @@ const MFAPage = () => {
   const refs = inputs.map(() => useRef<HTMLInputElement | HTMLTextAreaElement>(null));
   const appDispatch = useAppDispatch();
   const userDispatch = useUserDispatch();
+  const errorMessageHandler = useError();
   const history = useHistory();
   const prevInputs = usePrevious(inputs);
   const classes = useStyles();
 
   useEffect(() => {
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath('/users/me'), source)
+    asyncGetRequest('/users/me')
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -101,7 +103,7 @@ const MFAPage = () => {
 
   const handleClick = () => {
     appDispatch({ type: 'loading' });
-    axios.post(makeAPIPath('/auth/otp'), { token: inputs.join('') })
+    axios.post('/auth/otp', { token: inputs.join('') })
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -114,7 +116,7 @@ const MFAPage = () => {
           info: {
             id,
             name,
-            avatar: makeAPIPath(`/${avatar}`),
+            avatar,
             enable2FA,
             authenticatorSecret,
             isSecondFactorAuthenticated,
@@ -126,7 +128,7 @@ const MFAPage = () => {
       })
       .catch((error) => {
         if (error.response) toast.error('인증 번호가 잘못되었습니다.');
-        else toast.error(error.message);
+        else errorMessageHandler(error);
       });
   };
 

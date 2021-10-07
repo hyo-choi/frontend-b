@@ -60,4 +60,4 @@ Input.defaultProps = {
   autoComplete: false,
 };
 
-export default Input;
+export default React.memo(Input);

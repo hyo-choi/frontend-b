@@ -35,4 +35,4 @@ const PlayerProfile = ({ userGameInfo }: PlayerProfileProps) => {
   );
 };
 
-export default PlayerProfile;
+export default React.memo(PlayerProfile);

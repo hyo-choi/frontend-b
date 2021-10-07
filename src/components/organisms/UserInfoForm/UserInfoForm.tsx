@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Grid, makeStyles } from '@material-ui/core';
@@ -14,6 +14,7 @@ import Button from '../../atoms/Button/Button';
 import Switch from '../../atoms/Switch/Switch';
 import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
 import useLogout from '../../../utils/hooks/useLogout';
+import useError from '../../../utils/hooks/useError';
 
 const useStyles = makeStyles({
   root: {
@@ -40,6 +41,8 @@ type UserInfoFormProps = {
 const UserInfoForm = ({
   currentName, currentAvatarSrc, current2FA, setDialog, setOpen, ftId,
 }: UserInfoFormProps) => {
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
   const [username, setUsername] = useState<string>(currentName);
   const [helperText, setHelperText] = useState<string>('영문+숫자 3-12자');
   const [isValidName, setNameValid] = useState<boolean>(false);
@@ -50,6 +53,7 @@ const UserInfoForm = ({
   const [filename, setFilename] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<string | Blob>('');
   const [previewSrc, setPreviewSrc] = useState<string>(currentAvatarSrc || makeAPIPath('/files/avatar/default.png'));
+  const errorMessageHandler = useError();
   const appDispatch = useAppDispatch();
   const userDispatch = useUserDispatch();
   const handleLogout = useLogout();
@@ -75,7 +79,9 @@ const UserInfoForm = ({
     fileReader.readAsDataURL(imageFile as Blob);
   }, [imageFile]);
 
-  const handleNameChange = (event: React.ChangeEvent<Element>) => {
+  useEffect(() => () => source.cancel(), []);
+
+  const handleNameChange = useCallback((event: React.ChangeEvent<Element>) => {
     const { value } = (event as React.ChangeEvent<HTMLInputElement>).target;
     if (value.length > 12) return;
 
@@ -89,11 +95,11 @@ const UserInfoForm = ({
     } else {
       setNameChecked(false);
     }
-  };
+  }, [currentName]);
 
-  const handleNameCheck = () => {
+  const handleNameCheck = useCallback(() => {
     appDispatch({ type: 'loading' });
-    axios.head(makeAPIPath(`/users/${username}`))
+    axios.head(`/users/${username}`)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -106,18 +112,18 @@ const UserInfoForm = ({
         if (error.response && error.response.status === 404) {
           setHelperText('사용할 수 있는 닉네임입니다.');
           setNameChecked(true);
-        } else toast.error(error.message);
+        } else errorMessageHandler(error);
       });
-  };
+  }, [username]);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const split = event.target.value.split('\\');
     setFilename(split[split.length - 1]);
     if (event.target.files) setImageFile(event.target.files[0]);
     else setImageFile(new Blob());
-  };
+  }, []);
 
-  const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData();
@@ -127,7 +133,7 @@ const UserInfoForm = ({
     formData.append('ftId', ftId!);
     appDispatch({ type: 'loading' });
     axios({
-      url: makeAPIPath('/users'),
+      url: '/users',
       method: 'post',
       data: formData,
     })
@@ -155,11 +161,11 @@ const UserInfoForm = ({
           if (error.response.status === 500) {
             toast.error('서버에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
           } else toast.error('입력값이 잘못되었습니다. 다시 확인해주세요.');
-        } else toast.error(error.message);
+        } else errorMessageHandler(error);
       });
-  };
+  }, [imageFile, username, is2FAEnabled, ftId]);
 
-  const handleEdit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleEdit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData();
     if (isAvatarChanged) formData.append('avatar', imageFile);
@@ -167,7 +173,7 @@ const UserInfoForm = ({
     if (is2FAChanged) formData.append('enable2FA', String(is2FAEnabled));
     appDispatch({ type: 'loading' });
     axios({
-      url: makeAPIPath('/users/me'),
+      url: '/users/me',
       method: 'patch',
       data: formData,
     })
@@ -183,7 +189,7 @@ const UserInfoForm = ({
           info: {
             id,
             name,
-            avatar: makeAPIPath(`/${avatar}`),
+            avatar,
             enable2FA,
             authenticatorSecret,
             isSecondFactorAuthenticated,
@@ -206,11 +212,11 @@ const UserInfoForm = ({
           if (error.response.status === 500) {
             toast.error('서버에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
           } else toast.error('입력값이 잘못되었습니다. 다시 확인해주세요.');
-        } else toast.error(error.message);
+        } else errorMessageHandler(error);
       });
-  };
+  }, [imageFile, username, is2FAEnabled]);
 
-  const isValidForm = () => {
+  const isValidForm = useCallback(() => {
     if (is2FAChanged) {
       if (username === currentName) return is2FAChanged;
       return isNameChecked && is2FAChanged;
@@ -220,7 +226,7 @@ const UserInfoForm = ({
     }
     if (username !== currentName) return isNameChecked;
     return false;
-  };
+  }, [is2FAChanged, username, currentName, isNameChecked, isAvatarChanged]);
 
   return (
     <>
@@ -281,4 +287,4 @@ UserInfoForm.defaultProps = {
   ftId: '',
 };
 
-export default UserInfoForm;
+export default React.memo(UserInfoForm);

@@ -9,9 +9,10 @@ import Dialog from '../../molecules/Dialog/Dialog';
 import LoginTemplate from '../../templates/LoginTemplate/LoginTemplate';
 import { RawUserInfoType } from '../../../types/Response';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
 import Typo from '../../atoms/Typo/Typo';
 import useDialog from '../../../utils/hooks/useDialog';
+import useError from '../../../utils/hooks/useError';
 
 const useStyles = makeStyles({
   image: {
@@ -29,11 +30,12 @@ const MFARegisterPage = () => {
   } = useDialog();
   const classes = useStyles();
   const appDispatch = useAppDispatch();
+  const errorMessageHandler = useError();
   const history = useHistory();
 
   useEffect(() => {
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath('/users/me'), source)
+    asyncGetRequest('/users/me')
       .then(({ data }: { data: RawUserInfoType }) => {
         const { enable2FA, authenticatorSecret } = data;
         if (!enable2FA || (enable2FA && authenticatorSecret)) {

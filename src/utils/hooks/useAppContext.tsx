@@ -1,10 +1,11 @@
 import React, {
   createContext, useReducer, useContext, Dispatch,
 } from 'react';
+import { toast } from 'react-toastify';
 import { Socket } from 'socket.io-client';
 import { ChannelType, DMRoomType, MessageType } from '../../types/Chat';
 import { UserInfoType } from '../../types/User';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../utils';
+import { asyncGetRequest } from '../utils';
 
 type ChattingType = {
   type: 'channel' | 'DM',
@@ -71,9 +72,13 @@ const newMessageReducer = (state: AppStateType, message: MessageType): AppStateT
     let userInfo : UserInfoType | null = null;
     if (message.user.name === message.name) userInfo = message.user;
     else {
-      asyncGetRequest(makeAPIPath('/users/me'))
+      asyncGetRequest('/users/me')
         .then(({ data }) => { userInfo = data; })
-        .catch((error) => { errorMessageHandler(error); });
+        .catch((error) => {
+          if (error.response?.data?.message) {
+            toast.error(error.response.data.message[0]);
+          } else toast.error(error.message);
+        });
     }
     ret.DMs = state.DMs.concat({
       ...userInfo!,

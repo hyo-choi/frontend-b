@@ -9,7 +9,7 @@ import Button from '../../atoms/Button/Button';
 import Dialog from '../../molecules/Dialog/Dialog';
 import UserInfoForm from '../../organisms/UserInfoForm/UserInfoForm';
 import useDialog from '../../../utils/hooks/useDialog';
-import { asyncGetRequest, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
 
 const useStyles = makeStyles({
@@ -36,7 +36,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath('/users/me'))
+    asyncGetRequest('/users/me')
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })

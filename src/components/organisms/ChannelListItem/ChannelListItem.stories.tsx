@@ -23,11 +23,13 @@ export const Default = () => {
   };
 
   return (
-    <ChannelListItem
-      info={channelInfo0}
-      setOpen={() => {}}
-      setDialog={() => {}}
-    />
+    <ContextProvider>
+      <ChannelListItem
+        info={channelInfo0}
+        setOpen={() => {}}
+        setDialog={() => {}}
+      />
+    </ContextProvider>
   );
 };
 
@@ -109,53 +111,54 @@ export const WithList = () => {
   };
 
   return (
-    <List scroll height="70vh">
-      <ChannelListItem
-        info={channelInfo1}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo2}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo3}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo4}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo5}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo6}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo7}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-      <ChannelListItem
-        info={channelInfo8}
-        setOpen={() => {}}
-        setDialog={() => {}}
-      />
-    </List>
+    <ContextProvider>
+      <List scroll height="70vh">
+        <ChannelListItem
+          info={channelInfo1}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo2}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo3}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo4}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo5}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo6}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo7}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+        <ChannelListItem
+          info={channelInfo8}
+          setOpen={() => {}}
+          setDialog={() => {}}
+        />
+      </List>
+    </ContextProvider>
   );
 };
 
 export const WithTemplate = () => (
-
   <BrowserRouter>
     <ContextProvider>
       <MainTemplate

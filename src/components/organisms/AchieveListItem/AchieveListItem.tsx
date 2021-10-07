@@ -48,7 +48,7 @@ type AchieveListItemProps = {
   info: AchievementType,
 };
 
-export const AchieveListItemSkeleton = () => {
+export const AchieveListItemSkeleton = React.memo(() => {
   const classes = useStyles();
   return (
     <ListItem>
@@ -65,30 +65,28 @@ export const AchieveListItemSkeleton = () => {
       </Grid>
     </ListItem>
   );
-};
+});
 
 const AchieveListItem = ({ info }: AchieveListItemProps) => {
   const { name, description, createdAt } = info;
-  const icon = ACHIEVEMENT_LIST[name];
-  const dateStr = makeDateString(createdAt);
   const classes = useStyles();
 
   return (
     <ListItem>
       <Grid className={classes.root} item container justifyContent="space-around" alignItems="center">
         <Grid item container justifyContent="center" alignItems="center" xs={3}>
-          {icon}
+          {ACHIEVEMENT_LIST[name]}
         </Grid>
         <Grid item container direction="column" justifyContent="center" alignItems="center" xs={6}>
           <Typo variant="h6">{name.replace('_', ' ')}</Typo>
           <Typo variant="subtitle2">{description}</Typo>
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={3}>
-          <Typo variant="body1">{dateStr}</Typo>
+          <Typo variant="body1">{makeDateString(createdAt)}</Typo>
         </Grid>
       </Grid>
     </ListItem>
   );
 };
 
-export default AchieveListItem;
+export default React.memo(AchieveListItem);

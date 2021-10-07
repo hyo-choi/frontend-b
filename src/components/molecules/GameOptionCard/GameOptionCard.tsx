@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core/styles';
@@ -44,7 +44,7 @@ type GameCardType = {
 const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
   const classes = useStyles();
 
-  const GameCard = ({
+  const GameCard = React.memo(({
     alt, src, title, description,
   }: GameCardType) => (
     <>
@@ -60,45 +60,45 @@ const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
         <Typo variant="body1">{description}</Typo>
       </CardContent>
     </>
-  );
+  ));
 
-  const ClassicGame = () => (
+  const ClassicGame = React.memo(() => (
     <GameCard
       alt="Join Classic Game"
       src="/images/normal.png"
       title="Classic Game"
       description="상대방보다 먼저 5점을 획득하면 이기는 게임입니다. 키보드 방향키로 탁구채를 조작하여 공을 상대방쪽으로 넘기세요."
     />
-  );
+  ));
 
-  const SpeedGame = () => (
+  const SpeedGame = React.memo(() => (
     <GameCard
       alt="Join Speed Game"
       src="/images/fast.png"
       title="Speed Game"
       description="공이 더 빨라졌습니다. 상대방보다 먼저 5점을 획득하여 당신의 실력을 증명하세요."
     />
-  );
+  ));
 
-  const ReverseGame = () => (
+  const ReverseGame = React.memo(() => (
     <GameCard
       alt="Join Reverse Game"
       src="/images/reverse.png"
       title="Reverse Game"
       description="키보드 조작을 반대로 해야하는 이벤트 모드입니다. 이벤트 모드에서 승리하여 또 다른 재미를 느껴보세요."
     />
-  );
+  ));
 
-  const WatchGame = () => (
+  const WatchGame = React.memo(() => (
     <GameCard
       alt="Join Watch Game"
       src="/images/view.png"
       title="Watch Game"
       description="다른 사람들이 실시간으로 게임하는 것을 관전하세요."
     />
-  );
+  ));
 
-  const ChooseOption = (opt: GameModeType | 'WATCH') => {
+  const ChooseOption = useCallback((opt: GameModeType | 'WATCH') => {
     switch (opt) {
       case 'WATCH':
         return (<WatchGame />);
@@ -110,7 +110,7 @@ const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
       default:
         return (<ClassicGame />);
     }
-  };
+  }, []);
 
   return (
     <CardActionArea onClick={onClick}>
@@ -121,4 +121,4 @@ const GameOptionCard = ({ option, onClick } : GameOptionCardProps) => {
   );
 };
 
-export default GameOptionCard;
+export default React.memo(GameOptionCard);

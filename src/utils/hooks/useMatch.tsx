@@ -11,7 +11,6 @@ import { useAppState } from './useAppContext';
 import { useGameDispatch } from './useGameContext';
 import { RawUserInfoType } from '../../types/Response';
 import { MatchPositionType, GameModeType } from '../../types/Match';
-import { makeAPIPath } from '../utils';
 import { SetOpenType, SetDialogType } from './useDialog';
 import { PLAY_PATH } from '../path';
 
@@ -49,8 +48,8 @@ const useMatch = (setOpen: SetOpenType, setDialog: SetDialogType) => {
     gameDispatch({
       type: 'ready',
       position,
-      player0: { ...player0, avatar: makeAPIPath(`/${player0.avatar}`) },
-      player1: { ...player1, avatar: makeAPIPath(`/${player1.avatar}`) },
+      player0,
+      player1,
       setting: gameSetting,
     });
     setOpen(false);

@@ -77,4 +77,4 @@ List.defaultProps = {
   children: null,
 };
 
-export default List;
+export default React.memo(List);

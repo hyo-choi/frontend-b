@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
@@ -13,8 +13,8 @@ import { MembershipRole, MemberType } from '../../../types/Chat';
 import { UserStatusType } from '../../../types/User';
 import Button from '../../atoms/Button/Button';
 import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import { errorMessageHandler, makeAPIPath } from '../../../utils/utils';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
+import useError from '../../../utils/hooks/useError';
 
 type StyleProps = {
   status: UserStatusType,
@@ -108,7 +108,7 @@ const useSkeletonStyles = makeStyles({
   },
 });
 
-export const ChannelUserListItemSkeleton = () => {
+export const ChannelUserListItemSkeleton = React.memo(() => {
   const classes = useSkeletonStyles();
   return (
     <ListItem>
@@ -131,7 +131,7 @@ export const ChannelUserListItemSkeleton = () => {
       </Grid>
     </ListItem>
   );
-};
+});
 
 const StyledBadge = withStyles(() => createStyles({
   badge: {
@@ -156,6 +156,31 @@ type ButtonObjType = {
   onClick: React.MouseEventHandler,
 };
 
+const makeStatusString = (status: UserStatusType): string => {
+  switch (status) {
+    case 'ONLINE':
+    case 'OFFLINE':
+      return status;
+    case 'IN_GAME':
+      return '게임 중';
+    default:
+      return '';
+  }
+};
+
+const makeRoleString = (role: MembershipRole): string => {
+  switch (role) {
+    case 'OWNER':
+      return '채널 주인';
+    case 'ADMIN':
+      return '관리자';
+    case 'BANNED':
+      return '차단된 유저';
+    default:
+      return '채팅 참여자';
+  }
+};
+
 const ChannelUserListItem = ({
   info, myRole, setUser, setOpen, setDialog, channelName,
 }: ChannelUserListItemProps) => {
@@ -164,18 +189,19 @@ const ChannelUserListItem = ({
   } = info;
   const { role, unmutedAt } = memberships[0];
   const appDispatch = useAppDispatch();
+  const errorMessageHandler = useError();
   const me = useUserState();
   const classes = useStyles({ status, role });
 
   if (me.id === id) return null;
 
-  const handlePatchRequest = (
+  const handlePatchRequest = useCallback((
     comment: string,
     type: 'ADMIN' | 'MEMBER' | 'BANNED' | 'mute' | 'unmute',
   ) => {
     const path = ['ADMIN', 'MEMBER', 'BANNED'].includes(type) ? 'role' : type;
     appDispatch({ type: 'loading' });
-    axios.patch(makeAPIPath(`/channels/${channelName}/members/${name}/${path}`),
+    axios.patch(`/channels/${channelName}/members/${name}/${path}`,
       path !== type ? { role: type } : null)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
@@ -191,11 +217,11 @@ const ChannelUserListItem = ({
       })
       .catch((error) => { errorMessageHandler(error); });
     setOpen(false);
-  };
+  }, [info, channelName]);
 
-  const handleUnBanUser = () => {
+  const handleUnBanUser = useCallback(() => {
     appDispatch({ type: 'loading' });
-    axios.delete(makeAPIPath(`/channels/${channelName}/members/${name}`))
+    axios.delete(`/channels/${channelName}/members/${name}`)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -210,34 +236,9 @@ const ChannelUserListItem = ({
       })
       .catch((error) => { errorMessageHandler(error); });
     setOpen(false);
-  };
+  }, [info, channelName]);
 
-  const makeStatusString = (): string => {
-    switch (status) {
-      case 'ONLINE':
-      case 'OFFLINE':
-        return status;
-      case 'IN_GAME':
-        return '게임 중';
-      default:
-        return '';
-    }
-  };
-
-  const makeRoleString = (): string => {
-    switch (role) {
-      case 'OWNER':
-        return '채널 주인';
-      case 'ADMIN':
-        return '관리자';
-      case 'BANNED':
-        return '차단된 유저';
-      default:
-        return '채팅 참여자';
-    }
-  };
-
-  const banButton = ((): ButtonObjType => {
+  const makeBanButton = useCallback((): ButtonObjType => {
     switch (role) {
       case 'BANNED':
         return {
@@ -286,9 +287,9 @@ const ChannelUserListItem = ({
           },
         };
     }
-  })();
+  }, [info]);
 
-  const muteButton = ((): ButtonObjType => {
+  const makeMuteButton = useCallback((): ButtonObjType => {
     switch (unmutedAt) {
       case null:
         return {
@@ -337,9 +338,9 @@ const ChannelUserListItem = ({
           },
         };
     }
-  })();
+  }, [info]);
 
-  const adminButton = ((): ButtonObjType => {
+  const makeAdminButton = useCallback((): ButtonObjType => {
     switch (role) {
       case 'ADMIN':
         return {
@@ -388,17 +389,17 @@ const ChannelUserListItem = ({
           },
         };
     }
-  })();
+  }, [info]);
 
-  const buttonArray = () => {
+  const makeButtonArray = useCallback(() => {
     const array: ButtonObjType[] = [];
-    array.push(banButton);
-    array.push(muteButton);
-    if (myRole === 'OWNER') array.push(adminButton);
+    array.push(makeBanButton());
+    array.push(makeMuteButton());
+    if (myRole === 'OWNER') array.push(makeAdminButton());
     return (array);
-  };
+  }, [info]);
 
-  const Buttons = buttonArray().map((button) => (
+  const Buttons = makeButtonArray().map((button) => (
     <Grid item key={button.text}>
       <Button
         onClick={button.onClick}
@@ -433,10 +434,10 @@ const ChannelUserListItem = ({
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={3} direction="column">
           <Typo variant="h6">{name}</Typo>
-          <Typo className={classes.status} variant="subtitle1">{makeStatusString()}</Typo>
+          <Typo className={classes.status} variant="subtitle1">{makeStatusString(status)}</Typo>
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={2}>
-          <Typo variant="subtitle1" className={classes.role}>{makeRoleString()}</Typo>
+          <Typo variant="subtitle1" className={classes.role}>{makeRoleString(role)}</Typo>
         </Grid>
         <Grid item container justifyContent="flex-end" alignItems="center" xs={4}>
           {role === 'OWNER' ? null : Buttons}
@@ -446,4 +447,4 @@ const ChannelUserListItem = ({
   );
 };
 
-export default ChannelUserListItem;
+export default React.memo(ChannelUserListItem);

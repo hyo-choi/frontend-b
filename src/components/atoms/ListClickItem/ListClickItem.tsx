@@ -34,4 +34,4 @@ const ListClickItem = ({ onClick, children }: ListClickItemProps) => {
   );
 };
 
-export default ListClickItem;
+export default React.memo(ListClickItem);

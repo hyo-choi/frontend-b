@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-import React from 'react';
+import React, { useCallback } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
@@ -114,9 +113,8 @@ const MatchListItem = ({
   opposite, isMeWinner, mode, createdAt,
 }: MatchListItemProps) => {
   const { avatar, name } = opposite;
-  const dateStr = makeDateString(createdAt);
   const classes = useStyles();
-  const makeIcon = () => {
+  const makeIcon = useCallback(() => {
     switch (mode) {
       case 'SPEED':
         return (
@@ -138,7 +136,7 @@ const MatchListItem = ({
           </Tooltip>
         );
     }
-  };
+  }, [mode]);
   return (
     <ListItem>
       <Grid className={classes.root} item container justifyContent="space-around" alignItems="center">
@@ -158,11 +156,11 @@ const MatchListItem = ({
           <Typo variant="h6">{name}</Typo>
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={2}>
-          <Typo variant="body1">{dateStr}</Typo>
+          <Typo variant="body1">{makeDateString(createdAt)}</Typo>
         </Grid>
       </Grid>
     </ListItem>
   );
 };
 
-export default MatchListItem;
+export default React.memo(MatchListItem);

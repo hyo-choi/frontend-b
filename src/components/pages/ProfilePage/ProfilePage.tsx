@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
 import List from '../../atoms/List/List';
 import Typo from '../../atoms/Typo/Typo';
@@ -13,12 +12,13 @@ import AchieveListItem, { AchieveListItemSkeleton } from '../../organisms/Achiev
 import { RelatedInfoType } from '../../../types/User';
 import { useUserState } from '../../../utils/hooks/useUserContext';
 import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import { makeRelatedInfo } from '../../../utils/friendships';
 import { initialRawFriendInfo, initialRawUserInfo, RawRelatedInfoType } from '../../../types/Response';
 import { RawAchievementType, AchievementType } from '../../../types/Game';
 import { RawMatchType, MatchType } from '../../../types/Match';
 import useIntersect from '../../../utils/hooks/useIntersect';
+import useError from '../../../utils/hooks/useError';
 
 const COUNTS_PER_PAGE = 10;
 
@@ -41,21 +41,20 @@ type MatchParams = {
 const MatchHistory = ({ username }: UserNameType) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = makeAPIPath(`/users/${username}/matches`);
+  const path = `/users/${username}/matches`;
   const [matchHistories, setMatchHistories] = useState<MatchType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
+  const errorMessageHandler = useError();
 
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}&status=DONE`, source)
+    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}&status=DONE`)
       .then(({ data }: { data: RawMatchType[] }) => {
         const match: MatchType[] = data.map((info) => ({
           ...info,
           createdAt: new Date(info.createdAt),
-          user1: { ...info.user1, avatar: makeAPIPath(`/${info.user1.avatar}`) },
-          user2: { ...info.user2, avatar: makeAPIPath(`/${info.user2.avatar}`) },
         }));
         setMatchHistories((prev) => prev.concat(match));
         if (data.length === 0 || data.length < COUNTS_PER_PAGE) setListEnd(true);
@@ -130,7 +129,8 @@ const AchievementList = ({ username }: UserNameType) => {
   const source = CancelToken.source();
   const [achieves, setAchieves] = useState<AchievementType[]>([]);
   const [isLoaded, setLoaded] = useState<boolean>(false);
-  const path = makeAPIPath(`/users/${username}/achievements`);
+  const errorMessageHandler = useError();
+  const path = `/users/${username}/achievements`;
 
   useEffect(() => {
     axios.get(path, { cancelToken: source.token })
@@ -184,6 +184,7 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
   } = useDialog();
   const { username } = match.params;
   const appDispatch = useAppDispatch();
+  const errorMessageHandler = useError();
   const history = useHistory();
   const me = useUserState();
 
@@ -193,11 +194,11 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
       friendship: initialRawFriendInfo,
     };
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath(`/users/${username}`), source)
+    asyncGetRequest(`/users/${username}`)
       .then(({ data }) => {
         Object.assign(userInfo, data);
         return (
-          asyncGetRequest(makeAPIPath(`/friendships/${username}`), source)
+          asyncGetRequest(`/friendships/${username}`)
             .then((response) => {
               Object.assign(userInfo.friendship, response.data);
               setUser(makeRelatedInfo(me, userInfo));
@@ -207,16 +208,14 @@ const ProfilePage = ({ match }: RouteComponentProps<MatchParams>) => {
               if (error.response && [404, 409].includes(error.response.status)) {
                 userInfo.friendship = null;
                 setUser(makeRelatedInfo(me, userInfo));
-              } else toast.error(error.message);
+              } else errorMessageHandler(error);
             }));
       })
       .catch((error) => {
         source.cancel();
-        if (error.response && error.response.status >= 400 && error.response.status < 500) {
+        if (error.response?.status === 404) {
           history.push('/404');
-        } else {
-          toast.error(error.message);
-        }
+        } else errorMessageHandler(error);
       })
       .finally(() => {
         appDispatch({ type: 'endLoading' });

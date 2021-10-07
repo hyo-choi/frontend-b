@@ -52,4 +52,4 @@ Dialog.defaultProps = {
   container: null,
 };
 
-export default Dialog;
+export default React.memo(Dialog);

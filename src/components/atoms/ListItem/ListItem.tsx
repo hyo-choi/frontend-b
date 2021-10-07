@@ -21,4 +21,4 @@ const ListItem = ({ children }: ListItemProps) => {
   );
 };
 
-export default ListItem;
+export default React.memo(ListItem);

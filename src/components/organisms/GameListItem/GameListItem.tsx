@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -76,7 +76,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const GameListItemSkeleton = () => {
+export const GameListItemSkeleton = React.memo(() => {
   const classes = useStyles();
   return (
     <ListClickItem onClick={() => {}}>
@@ -102,7 +102,7 @@ export const GameListItemSkeleton = () => {
       </Grid>
     </ListClickItem>
   );
-};
+});
 
 type GameListItemProps = {
   leftUser: UserInfoType,
@@ -115,7 +115,7 @@ const GameListItem = ({
   leftUser, rightUser, mode, onClick,
 }: GameListItemProps) => {
   const classes = useStyles();
-  const makeIcon = () => {
+  const makeIcon = useCallback(() => {
     switch (mode) {
       case 'SPEED':
         return (
@@ -137,7 +137,7 @@ const GameListItem = ({
           </Tooltip>
         );
     }
-  };
+  }, [mode]);
   return (
     <ListClickItem onClick={onClick}>
       <Grid className={classes.root} item container justifyContent="space-around" alignItems="center">
@@ -164,4 +164,4 @@ const GameListItem = ({
   );
 };
 
-export default GameListItem;
+export default React.memo(GameListItem);

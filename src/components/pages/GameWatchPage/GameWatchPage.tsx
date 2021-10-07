@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import { RawMatchType, MatchType, GameModeType } from '../../../types/Match';
 import List from '../../atoms/List/List';
 import SubMenu from '../../molecules/SubMenu/SubMenu';
@@ -14,6 +14,7 @@ import { useAppState } from '../../../utils/hooks/useAppContext';
 import useMatch from '../../../utils/hooks/useMatch';
 import { DialogProps } from '../../../utils/hooks/useDialog';
 import { useGameDispatch } from '../../../utils/hooks/useGameContext';
+import useError from '../../../utils/hooks/useError';
 
 const ALL_MATCH_PATH = '/game/watch/all';
 const LADDER_MATCH_PATH = '/game/watch/ladder';
@@ -33,10 +34,11 @@ const dummySetDialog = (value: DialogProps) => {};
 const MatchList = ({ type }: ListProps) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = makeAPIPath('/matches?status=IN_PROGRESS');
+  const path = '/matches?status=IN_PROGRESS';
   const typePath = type === 'ALL' ? '' : `&type=${type}`;
   const { socket } = useAppState();
   const gameDispatch = useGameDispatch();
+  const errorMessageHandler = useError();
   const { handleReady } = useMatch(dummySetOpen, dummySetDialog);
   const [matches, setMatches] = useState<MatchType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
@@ -56,13 +58,11 @@ const MatchList = ({ type }: ListProps) => {
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}&perPage=${COUNTS_PER_PAGE}&page=${page}${typePath}`, source)
+    asyncGetRequest(`${path}&perPage=${COUNTS_PER_PAGE}&page=${page}${typePath}`)
       .then(({ data }: { data: RawMatchType[] }) => {
         const typed: MatchType[] = data.map((match) => ({
           ...match,
           createdAt: new Date(match.createdAt),
-          user1: { ...match.user1, avatar: makeAPIPath(`/${match.user1.avatar}`) },
-          user2: { ...match.user2, avatar: makeAPIPath(`/${match.user2.avatar}`) },
         }));
         setMatches((prev) => prev.concat(typed));
         if (data.length === 0 || data.length < COUNTS_PER_PAGE) setListEnd(true);

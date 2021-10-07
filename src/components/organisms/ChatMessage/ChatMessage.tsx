@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
@@ -67,7 +67,7 @@ const ChatMessage = ({
   const history = useHistory();
   const location = useLocation();
 
-  const handleMatchChoice = () => {
+  const handleMatchChoice = useCallback(() => {
     setDialog({
       title: '매치 초대',
       content: (
@@ -83,14 +83,14 @@ const ChatMessage = ({
       onClose: () => setOpen(false),
     });
     setOpen(true);
-  };
+  }, [info]);
 
-  const handleProfileClick = () => {
+  const handleProfileClick = useCallback(() => {
     history.push(`/profile/${name}`);
     setOpen(false);
-  };
+  }, [info]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     setDialog({
       content: (
         <Grid container direction="column" justifyContent="center" alignItems="center">
@@ -107,7 +107,7 @@ const ChatMessage = ({
       onClose: () => setOpen(false),
     });
     setOpen(true);
-  };
+  }, [info, location.pathname]);
 
   return (
     <Grid
@@ -160,4 +160,4 @@ ChatMessage.defaultProps = {
   me: false,
 };
 
-export default ChatMessage;
+export default React.memo(ChatMessage);

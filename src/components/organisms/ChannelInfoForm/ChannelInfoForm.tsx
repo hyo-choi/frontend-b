@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { Grid, makeStyles } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import { SetOpenType } from '../../../utils/hooks/useDialog';
 import Input from '../../atoms/Input/Input';
 import Switch from '../../atoms/Switch/Switch';
 import Typo from '../../atoms/Typo/Typo';
 import Button from '../../atoms/Button/Button';
+import useError from '../../../utils/hooks/useError';
 
 const useStyles = makeStyles({
   edit: {
@@ -37,6 +38,8 @@ type ChannelInfoFormProps = {
 };
 
 const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
+  const { CancelToken } = axios;
+  const source = CancelToken.source();
   const [channelName, setChannelName] = useState<string>('');
   const [isValidChannelName, setValidChannelName] = useState<boolean>(false);
   // eslint-disable-next-line max-len
@@ -51,12 +54,13 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
   // eslint-disable-next-line max-len
   const [helperTextCheckPassword, setHelperTextCheckPassword] = useState<string>(CHANNEL_PASSWORD_HELPER_TEXT);
   const [isDuplicateChecked, setDuplicateChecked] = useState<boolean>(false);
+  const errorMessageHandler = useError();
   const appDispatch = useAppDispatch();
   const appState = useAppState();
   const classes = useStyles();
   const history = useHistory();
 
-  const handleChannelNameChange = (event: React.ChangeEvent<Element>) => {
+  const handleChannelNameChange = useCallback((event: React.ChangeEvent<Element>) => {
     const { value } = (event as React.ChangeEvent<HTMLInputElement>).target;
     if (value.length > 18) return;
     if (/^[^\s]+(\s+[^\s]+)*$/.test(value) && /^[0-9a-zA-z\uAC00-\uD7A3\s]{3,18}$/.test(value)) {
@@ -68,9 +72,9 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
     }
     setChannelName(value);
     setDuplicateChecked(false);
-  };
+  }, []);
 
-  const handlePasswordChange = (event: React.ChangeEvent<Element>) => {
+  const handlePasswordChange = useCallback((event: React.ChangeEvent<Element>) => {
     const { value } = (event as React.ChangeEvent<HTMLInputElement>).target;
     if (value.length > 32) return;
     if (/^[\S]{4,32}$/.test(value)) {
@@ -88,9 +92,9 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
       setHelperTextCheckPassword(PASSWORD_CHECK_NO);
     }
     setPassword(value);
-  };
+  }, [checkPassword]);
 
-  const handleCheckPasswordChange = (event: React.ChangeEvent<Element>) => {
+  const handleCheckPasswordChange = useCallback((event: React.ChangeEvent<Element>) => {
     const { value } = (event as React.ChangeEvent<HTMLInputElement>).target;
     if (value.length > 32) return;
     if (value === password) {
@@ -101,12 +105,12 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
       setHelperTextCheckPassword(PASSWORD_CHECK_NO);
     }
     setCheckPassword(value);
-  };
+  }, [password]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     appDispatch({ type: 'loading' });
-    axios.post(makeAPIPath('/channels'),
+    axios.post('/channels',
       isToggleChecked ? { name: channelName, password: checkPassword }
         : { name: channelName })
       .finally(() => {
@@ -134,14 +138,14 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
           if (error.response.status === 500) {
             toast.error('서버에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
           } else toast.error('입력값이 잘못되었습니다. 다시 확인해주세요.');
-        } else toast.error(error.message);
+        } else errorMessageHandler(error);
       });
-  };
+  }, [channelName, isToggleChecked, checkPassword]);
 
-  const handleEdit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleEdit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     appDispatch({ type: 'loading' });
-    axios.patch(makeAPIPath(`/channels/${channel}/password`),
+    axios.patch(`/channels/${channel}/password`,
       isToggleChecked ? { password: checkPassword } : {})
       .finally(() => {
         appDispatch({ type: 'endLoading' });
@@ -151,11 +155,11 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
         toast('채널 패스워드가 변경되었습니다.');
       })
       .catch((error) => { errorMessageHandler(error); });
-  };
+  }, [channel, isToggleChecked, checkPassword]);
 
-  const handleChannelNameCheck = () => {
+  const handleChannelNameCheck = useCallback(() => {
     appDispatch({ type: 'loading' });
-    axios.head(makeAPIPath(`/channels/${channelName}`))
+    axios.head(`/channels/${channelName}`)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -168,11 +172,11 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
           setHelperTextChannelName('사용할 수 있는 채널명입니다.');
           setValidChannelName(true);
           setDuplicateChecked(true);
-        } else toast.error(error.message);
+        } else errorMessageHandler(error);
       });
-  };
+  }, [channelName]);
 
-  const isValidForm = () => {
+  const isValidForm = useCallback(() => {
     if (!isToggleChecked) {
       if (isValidChannelName && isDuplicateChecked) return true;
       return false;
@@ -180,22 +184,26 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
     if (isValidChannelName && isValidPassword
       && isValidCheckPassword && isDuplicateChecked) return true;
     return false;
-  };
+  }, [isToggleChecked, isValidChannelName, isValidPassword,
+    isValidCheckPassword, isDuplicateChecked]);
 
   useEffect(() => {
     if (channel) {
       setValidChannelName(true);
       setDuplicateChecked(true);
       setChannelName(channel);
-      asyncGetRequest(makeAPIPath(`/channels/${channel}`))
+      asyncGetRequest(`/channels/${channel}`)
         .then(({ data }) => {
           setToggleCheck(data.password !== null);
         })
         .catch((error) => {
+          source.cancel();
           errorMessageHandler(error);
           setOpen(false);
         });
     }
+
+    return () => source.cancel();
   }, []);
 
   return (
@@ -288,4 +296,4 @@ ChannelInfoForm.defaultProps = {
   channel: '',
 };
 
-export default ChannelInfoForm;
+export default React.memo(ChannelInfoForm);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Badge from '@material-ui/core/Badge';
@@ -45,7 +45,7 @@ const UserProfile = ({ userInfo, profile }: UserProfileProps) => {
   } = userInfo;
   const classes = useStyles({ status });
 
-  const makeStatusString = (): string => {
+  const makeStatusString = useCallback((): string => {
     switch (status) {
       case 'ONLINE':
       case 'OFFLINE':
@@ -55,7 +55,7 @@ const UserProfile = ({ userInfo, profile }: UserProfileProps) => {
       default:
         return '';
     }
-  };
+  }, [status]);
 
   return (
     <Grid item container justifyContent="space-around" alignItems="center" xs={5}>

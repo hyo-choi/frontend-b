@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import List from '../../atoms/List/List';
 import useIntersect from '../../../utils/hooks/useIntersect';
 import { DMRoomType } from '../../../types/Chat';
@@ -11,6 +11,7 @@ import { RawUserInfoType } from '../../../types/Response';
 import DMListItem, { DMListItemSkeleton } from '../../organisms/DMListItem/DMListItem';
 import { UserInfoType } from '../../../types/User';
 import { useAppState } from '../../../utils/hooks/useAppContext';
+import useError from '../../../utils/hooks/useError';
 
 const COUNTS_PER_PAGE = 10;
 
@@ -20,16 +21,17 @@ const DMPage = () => {
   const [DMs, setDMs] = useState<DMRoomType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
+  const errorMessageHandler = useError();
   const userState = useUserState();
   const appState = useAppState();
-  const path = makeAPIPath('/dmers');
+  const path = '/dmers';
 
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`, source)
+    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`)
       .then(({ data }: { data: RawUserInfoType[] }) => {
-        const promises = data.map((one) => axios.get(makeAPIPath(`/dms/opposite/${one.name}?perPage=1&page=1`), {
+        const promises = data.map((one) => axios.get(`/dms/opposite/${one.name}?perPage=1&page=1`, {
           cancelToken: source.token,
         }));
         Promise.all(promises)
@@ -40,7 +42,6 @@ const DMPage = () => {
               const DM = appState.DMs.find((one) => one.name === opposite.name);
               return {
                 ...opposite,
-                avatar: makeAPIPath(`/${opposite.avatar}`),
                 latestMessage,
                 unreads: DM ? DM.unreads : 0,
               };

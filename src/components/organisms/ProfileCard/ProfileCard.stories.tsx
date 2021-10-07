@@ -218,7 +218,7 @@ const ProfileCardWithContext = () => {
   }, []);
 
   return (
-    <>
+    <ContextProvider>
       <Dialog
         isOpen={isOpen}
         title={dialog.title}
@@ -233,7 +233,7 @@ const ProfileCardWithContext = () => {
         setDialog={setDialog}
         profile
       />
-    </>
+    </ContextProvider>
   );
 };
 

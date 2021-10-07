@@ -3,7 +3,7 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import List from '../../atoms/List/List';
 import Button from '../../atoms/Button/Button';
 import Dialog from '../../molecules/Dialog/Dialog';
@@ -15,6 +15,7 @@ import { useAppDispatch } from '../../../utils/hooks/useAppContext';
 import { useUserState } from '../../../utils/hooks/useUserContext';
 import ChannelInfoForm from '../../organisms/ChannelInfoForm/ChannelInfoForm';
 import ChannelUserListItem, { ChannelUserListItemSkeleton } from '../../organisms/ChannelUserListItem/ChannelUserListItem';
+import useError from '../../../utils/hooks/useError';
 
 const COUNTS_PER_PAGE = 10;
 
@@ -30,10 +31,11 @@ const ChannelManagePage = ({ match }: RouteComponentProps<MatchParams>) => {
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
   const { channelName } = match.params;
-  const path = makeAPIPath(`/channels/${channelName}/members`);
+  const path = `/channels/${channelName}/members`;
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
+  const errorMessageHandler = useError();
   const history = useHistory();
   const userState = useUserState();
   const appDispatch = useAppDispatch();
@@ -50,9 +52,9 @@ const ChannelManagePage = ({ match }: RouteComponentProps<MatchParams>) => {
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`, source)
+    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`)
       .then(({ data }) => {
-        setUsers((prev) => prev.concat(data.map((user: MemberType) => ({ ...user, avatar: makeAPIPath(`/${user.avatar}`) }))));
+        setUsers((prev) => prev.concat(data));
         if (data.length === 0 || data.length < COUNTS_PER_PAGE) setListEnd(true);
       })
       .catch((error) => {
@@ -76,7 +78,7 @@ const ChannelManagePage = ({ match }: RouteComponentProps<MatchParams>) => {
 
   useEffect(() => {
     appDispatch({ type: 'loading' });
-    asyncGetRequest(makeAPIPath(`/channels/${channelName}/members`))
+    asyncGetRequest(`/channels/${channelName}/members`)
       .finally(() => { appDispatch({ type: 'endLoading' }); })
       .then(({ data }) => {
         const found = data.find((member: MemberType) => (
@@ -90,6 +92,7 @@ const ChannelManagePage = ({ match }: RouteComponentProps<MatchParams>) => {
         }
       })
       .catch((error) => {
+        source.cancel();
         errorMessageHandler(error);
         history.goBack();
       });

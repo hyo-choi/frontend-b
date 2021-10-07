@@ -49,9 +49,11 @@ const LongMessageDMRoomInfo: DMRoomType = {
   },
 };
 
-export const Default = () => <DMListItem roomInfo={ShortMessageDMRoomInfo} />;
+export const Default = () => (
+  <ContextProvider><DMListItem roomInfo={ShortMessageDMRoomInfo} /></ContextProvider>
+);
 
-export const SkeletonChannel = () => <DMListItemSkeleton />;
+export const SkeletonChannel = () => <ContextProvider><DMListItemSkeleton /></ContextProvider>;
 
 export const WithList = () => {
   const aDay: number = 86400000;
@@ -70,122 +72,124 @@ export const WithList = () => {
   const anYearAgo = new Date(nowString.getFullYear() - 1, nowString.getMonth(), nowString.getDate());
 
   return (
-    <List scroll height="70vh">
-      <DMListItem
-        roomInfo={{
-          ...ShortMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            content: '안녕? 방금 전 보낸 메시지',
-            createdAt: new Date(),
-          },
-          name: 'Jikang',
-          status: 'ONLINE',
-          unreads: 0,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...MediumMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: aMinuteAgo,
-            content: '안녕? 1분 전 보낸 메시지',
-          },
-          name: 'Ykoh',
-          status: 'IN_GAME',
-          unreads: 3,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...LongMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: anHourAgo,
-            content: '안녕? 1시간 전 보낸 메시지',
-          },
-          name: 'Hyochoi',
-          status: 'OFFLINE',
-          unreads: 6,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...ShortMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: aDayAgo,
-            content: '안녕? 1일 전 보낸 메시지',
-          },
-          name: 'Sujung',
-          status: 'ONLINE',
-          unreads: 9,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...MediumMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: aMonthAgo,
-            content: '안녕? 1달 전 보낸 메시지',
-          },
-          name: 'PopeKim',
-          status: 'IN_GAME',
-          unreads: 12,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...LongMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: anYearAgo,
-            content: '안녕? 1년 전 보낸 메시지 한글 글자수가 길어지면 문제가 생깁니다',
-          },
-          name: 'Velopert',
-          status: 'OFFLINE',
-          unreads: 15,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...ShortMessageDMRoomInfo,
-          latestMessage: {
-            ...ShortMessageDMRoomInfo.latestMessage,
-            createdAt: new Date(2018, 9, 10),
-          },
-          name: 'Thanos',
-          status: 'ONLINE',
-          unreads: 18,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...MediumMessageDMRoomInfo,
-          latestMessage: {
-            ...MediumMessageDMRoomInfo.latestMessage,
-            createdAt: new Date(2016, 9, 9),
-          },
-          name: 'SpiderMan',
-          status: 'IN_GAME',
-          unreads: 21,
-        }}
-      />
-      <DMListItem
-        roomInfo={{
-          ...LongMessageDMRoomInfo,
-          latestMessage: {
-            ...LongMessageDMRoomInfo.latestMessage,
-            createdAt: new Date(2001, 0, 8),
-          },
-          name: 'IronMan',
-          status: 'OFFLINE',
-          unreads: 24,
-        }}
-      />
-    </List>
+    <ContextProvider>
+      <List scroll height="70vh">
+        <DMListItem
+          roomInfo={{
+            ...ShortMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              content: '안녕? 방금 전 보낸 메시지',
+              createdAt: new Date(),
+            },
+            name: 'Jikang',
+            status: 'ONLINE',
+            unreads: 0,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...MediumMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: aMinuteAgo,
+              content: '안녕? 1분 전 보낸 메시지',
+            },
+            name: 'Ykoh',
+            status: 'IN_GAME',
+            unreads: 3,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...LongMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: anHourAgo,
+              content: '안녕? 1시간 전 보낸 메시지',
+            },
+            name: 'Hyochoi',
+            status: 'OFFLINE',
+            unreads: 6,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...ShortMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: aDayAgo,
+              content: '안녕? 1일 전 보낸 메시지',
+            },
+            name: 'Sujung',
+            status: 'ONLINE',
+            unreads: 9,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...MediumMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: aMonthAgo,
+              content: '안녕? 1달 전 보낸 메시지',
+            },
+            name: 'PopeKim',
+            status: 'IN_GAME',
+            unreads: 12,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...LongMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: anYearAgo,
+              content: '안녕? 1년 전 보낸 메시지 한글 글자수가 길어지면 문제가 생깁니다',
+            },
+            name: 'Velopert',
+            status: 'OFFLINE',
+            unreads: 15,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...ShortMessageDMRoomInfo,
+            latestMessage: {
+              ...ShortMessageDMRoomInfo.latestMessage,
+              createdAt: new Date(2018, 9, 10),
+            },
+            name: 'Thanos',
+            status: 'ONLINE',
+            unreads: 18,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...MediumMessageDMRoomInfo,
+            latestMessage: {
+              ...MediumMessageDMRoomInfo.latestMessage,
+              createdAt: new Date(2016, 9, 9),
+            },
+            name: 'SpiderMan',
+            status: 'IN_GAME',
+            unreads: 21,
+          }}
+        />
+        <DMListItem
+          roomInfo={{
+            ...LongMessageDMRoomInfo,
+            latestMessage: {
+              ...LongMessageDMRoomInfo.latestMessage,
+              createdAt: new Date(2001, 0, 8),
+            },
+            name: 'IronMan',
+            status: 'OFFLINE',
+            unreads: 24,
+          }}
+        />
+      </List>
+    </ContextProvider>
   );
 };
 

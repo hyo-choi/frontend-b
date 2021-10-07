@@ -56,4 +56,4 @@ Avatar.defaultProps = {
   onClick: null,
 };
 
-export default Avatar;
+export default React.memo(Avatar);

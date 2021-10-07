@@ -46,4 +46,4 @@ Button.defaultProps = {
   color: 'primary',
 };
 
-export default Button;
+export default React.memo(Button);

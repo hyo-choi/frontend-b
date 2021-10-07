@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import { errorMessageHandler, makeAPIPath } from '../utils';
 import { useAppDispatch } from './useAppContext';
 import { useUserDispatch } from './useUserContext';
 
@@ -11,7 +10,7 @@ const useLogout = () => {
 
   const handleLogout = () => {
     appDispatch({ type: 'loading' });
-    axios.get(makeAPIPath('/auth/logout'))
+    axios.get('/auth/logout')
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -20,7 +19,7 @@ const useLogout = () => {
         userDispatch({ type: 'logout' });
         history.push('/');
       })
-      .catch((error) => { errorMessageHandler(error); });
+      .catch(() => {});
   };
   return handleLogout;
 };

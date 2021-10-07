@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import List from '../../atoms/List/List';
 import SubMenu from '../../molecules/SubMenu/SubMenu';
 import Button from '../../atoms/Button/Button';
@@ -17,6 +17,7 @@ import { ChannelType, RawChannelType } from '../../../types/Chat';
 import { makeChannelInfo, renewUnreads } from '../../../utils/channels';
 import ChannelInfoForm from '../../organisms/ChannelInfoForm/ChannelInfoForm';
 import { useAppState } from '../../../utils/hooks/useAppContext';
+import useError from '../../../utils/hooks/useError';
 
 const ALL_PATH = '/channel/all';
 const JOINED_PATH = '/channel/joined';
@@ -41,8 +42,9 @@ const list = [
 const ChannelList = ({ type }: ListProps) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = type === 'joined' ? makeAPIPath('/channels/me') : makeAPIPath('/channels');
+  const path = type === 'joined' ? '/channels/me' : '/channels';
   const appState = useAppState();
+  const errorMessageHandler = useError();
   const [channels, setChannels] = useState<ChannelType[]>([]);
   const [isListEnd, setListEnd] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -53,7 +55,7 @@ const ChannelList = ({ type }: ListProps) => {
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`, source)
+    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`)
       .then(({ data }) => {
         const typed: ChannelType[] = data.map((channel: RawChannelType) => (
           makeChannelInfo(channel)));

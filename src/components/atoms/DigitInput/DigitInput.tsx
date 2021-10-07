@@ -36,4 +36,4 @@ DigitInput.defaultProps = {
   name: '',
 };
 
-export default DigitInput;
+export default React.memo(DigitInput);

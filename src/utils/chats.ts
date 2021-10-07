@@ -1,5 +1,4 @@
 import { MessageType, RawDMType, RawMessageType } from '../types/Chat';
-import { makeAPIPath } from './utils';
 
 const messageToMessage = (message: RawMessageType, channelName?: string): MessageType => {
   const {
@@ -8,7 +7,7 @@ const messageToMessage = (message: RawMessageType, channelName?: string): Messag
   return ({
     type: 'channel',
     content,
-    user: { ...user, avatar: makeAPIPath(`/${user.avatar}`) },
+    user,
     id,
     createdAt: new Date(createdAt),
     name: channelName || message.channel.name,
@@ -22,7 +21,7 @@ const DMToMessage = (message: RawDMType, myName: string): MessageType => {
   return ({
     type: 'DM',
     content,
-    user: { ...sender, avatar: makeAPIPath(`/${sender.avatar}`) },
+    user: { ...sender },
     id,
     createdAt: new Date(createdAt),
     name: receiver.name === myName ? sender.name : receiver.name,

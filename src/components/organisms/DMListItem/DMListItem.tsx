@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -92,7 +92,7 @@ const useSkeletonStyles = makeStyles({
   },
 });
 
-export const DMListItemSkeleton = () => {
+export const DMListItemSkeleton = React.memo(() => {
   const classes = useSkeletonStyles();
   return (
     <ListItem>
@@ -116,7 +116,7 @@ export const DMListItemSkeleton = () => {
       </Grid>
     </ListItem>
   );
-};
+});
 
 type DMListItemProps = {
   roomInfo: DMRoomType,
@@ -139,6 +139,23 @@ const makeDateString = (date: Date) => {
   return '방금 전';
 };
 
+const makeStatusString = (status: UserStatusType): string => {
+  switch (status) {
+    case 'ONLINE':
+    case 'OFFLINE':
+      return status;
+    case 'IN_GAME':
+      return '게임 중';
+    default:
+      return '';
+  }
+};
+
+const makeContentString = (content: string) => {
+  if (content.length > 23) return `${content.substring(0, 20)}...`;
+  return content;
+};
+
 const DMListItem = ({ roomInfo }: DMListItemProps) => {
   const {
     name, avatar, status, latestMessage, unreads,
@@ -148,35 +165,13 @@ const DMListItem = ({ roomInfo }: DMListItemProps) => {
   const appDispatch = useAppDispatch();
   const classes = useStyles({ status });
 
-  const handleClickToProfile = () => {
+  const handleClickToProfile = useCallback(() => {
     history.push(`/profile/${name}`);
-  };
+  }, [roomInfo]);
 
-  const handleClickToDM = () => {
+  const handleClickToDM = useCallback(() => {
     appDispatch({ type: 'enterChat', chatting: { type: 'DM', name } });
-  };
-
-  const dateStr = () => {
-    const dateString = makeDateString(createdAt);
-    return (<Typo variant="subtitle2">{dateString}</Typo>);
-  };
-
-  const makeContentString = () => {
-    if (content.length > 23) return `${content.substring(0, 20)}...`;
-    return content;
-  };
-
-  const makeStatusString = (): string => {
-    switch (status) {
-      case 'ONLINE':
-      case 'OFFLINE':
-        return status;
-      case 'IN_GAME':
-        return '게임 중';
-      default:
-        return '';
-    }
-  };
+  }, [roomInfo]);
 
   return (
     <ListItem>
@@ -190,13 +185,13 @@ const DMListItem = ({ roomInfo }: DMListItemProps) => {
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={2} direction="column">
           <Typo variant="h6">{name}</Typo>
-          <Typo className={classes.status} variant="subtitle1">{makeStatusString()}</Typo>
+          <Typo className={classes.status} variant="subtitle1">{makeStatusString(status)}</Typo>
         </Grid>
         <Grid item container justifyContent="center" alignItems="center" xs={1}>
-          {dateStr()}
+          {makeDateString(createdAt)}
         </Grid>
         <Grid item container justifyContent="flex-start" alignItems="center" xs={4}>
-          <Typo variant="body1">{makeContentString()}</Typo>
+          <Typo variant="body1">{makeContentString(content)}</Typo>
           {unreads ? (
             <Badge color="secondary" badgeContent={unreads} max={9} className={classes.badgeMargin} />
           ) : null}

@@ -41,4 +41,4 @@ Typo.defaultProps = {
   gutterBottom: false,
 };
 
-export default Typo;
+export default React.memo(Typo);

@@ -2,7 +2,6 @@ import { RawRelatedInfoType } from '../types/Response';
 import {
   FriendshipType, MyInfoType, RelatedInfoType, RelationshipType,
 } from '../types/User';
-import { makeAPIPath } from './utils';
 
 const makeRelationship = (isMeRequester: boolean, status: FriendshipType): RelationshipType => {
   switch (status) {
@@ -25,7 +24,7 @@ const makeRelatedInfo = (me: MyInfoType, rawData: RawRelatedInfoType): RelatedIn
   const result: RelatedInfoType = {
     id,
     name,
-    avatar: makeAPIPath(`/${avatar}`),
+    avatar,
     status,
     relationship: 'NONE',
     score,

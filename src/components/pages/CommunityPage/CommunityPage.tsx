@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import { asyncGetRequest, errorMessageHandler, makeAPIPath } from '../../../utils/utils';
+import { asyncGetRequest } from '../../../utils/utils';
 import List from '../../atoms/List/List';
 import ListItem from '../../atoms/ListItem/ListItem';
 import SubMenu from '../../molecules/SubMenu/SubMenu';
@@ -14,6 +14,7 @@ import { RawUserInfoType } from '../../../types/Response';
 import useDialog from '../../../utils/hooks/useDialog';
 import Dialog from '../../molecules/Dialog/Dialog';
 import useIntersect from '../../../utils/hooks/useIntersect';
+import useError from '../../../utils/hooks/useError';
 
 const ALL_PATH = '/community/all';
 const FRIEND_PATH = '/community/friend';
@@ -38,11 +39,12 @@ const relationships: RelationListType = {
 const UserList = ({ type }: ListProps) => {
   const { CancelToken } = axios;
   const source = CancelToken.source();
-  const path = type === 'all' ? makeAPIPath('/users') : makeAPIPath(`/${type}`);
+  const path = type === 'all' ? '/users' : `/${type}`;
   const relationship = relationships[type];
   const [users, setUsers] = useState<RelatedInfoType[]>([]);
   const [isListEnd, setListEnd] = useState(true);
   const [page, setPage] = useState<number>(0);
+  const errorMessageHandler = useError();
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
@@ -50,10 +52,10 @@ const UserList = ({ type }: ListProps) => {
   const fetchItems = () => {
     if (isListEnd) return;
 
-    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`, source)
+    asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`)
       .then(({ data }: { data: RawUserInfoType[] }) => {
         const typed: UserInfoType[] = data;
-        setUsers((prev) => prev.concat(typed.map((user) => ({ ...user, avatar: makeAPIPath(`/${user.avatar}`), relationship }))));
+        setUsers((prev) => prev.concat(typed.map((user) => ({ ...user, relationship }))));
         if (data.length === 0 || data.length < COUNTS_PER_PAGE) setListEnd(true);
       })
       .catch((error) => {
@@ -77,16 +79,16 @@ const UserList = ({ type }: ListProps) => {
 
   useEffect(() => {
     if (type === 'friends') {
-      asyncGetRequest(makeAPIPath('/friends?status=REQUESTED&me=REQUESTER'), source)
+      asyncGetRequest('/friends?status=REQUESTED&me=REQUESTER')
         .then(({ data }: { data: RawUserInfoType[] }) => {
           const typed: UserInfoType[] = data;
-          setUsers(typed.map((oneUser) => ({ ...oneUser, avatar: makeAPIPath(`/${oneUser.avatar}`), relationship: 'REQUESTING' })));
+          setUsers(typed.map((oneUser) => ({ ...oneUser, relationship: 'REQUESTING' })));
         })
         .catch((error) => { errorMessageHandler(error); });
-      asyncGetRequest(makeAPIPath('/friends?status=REQUESTED&me=ADDRESSEE'), source)
+      asyncGetRequest('/friends?status=REQUESTED&me=ADDRESSEE')
         .then(({ data }: { data: RawUserInfoType[] }) => {
           const typed: UserInfoType[] = data;
-          setUsers((prev) => prev.concat(typed.map((oneUser) => ({ ...oneUser, avatar: makeAPIPath(`/${oneUser.avatar}`), relationship: 'REQUESTED' }))));
+          setUsers((prev) => prev.concat(typed.map((oneUser) => ({ ...oneUser, relationship: 'REQUESTED' }))));
           setListEnd(false);
         })
         .catch((error) => {
