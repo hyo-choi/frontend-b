@@ -43,14 +43,12 @@ const ChatPage = () => {
   const [page, setPage] = useState<number>(0);
   const isSending = useRef<boolean>(false);
   const [members, setMembers] = useState<MemberType[]>([]);
-  const {
-    chatting, newMessage, blockList,
-  } = useAppState();
   const appDispatch = useAppDispatch();
+  const location = useLocation();
+  const { chatting, newMessage, blockList } = useAppState();
   const {
     isOpen, setOpen, dialog, setDialog,
   } = useDialog();
-  const location = useLocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChat(e.target.value);
@@ -75,6 +73,7 @@ const ChatPage = () => {
     const path = chatting.type === 'channel' ? makeAPIPath(`/channels/${chatting.name}/chats`) : makeAPIPath(`/dms/opposite/${chatting.name}`);
 
     asyncGetRequest(`${path}?perPage=${COUNTS_PER_PAGE}&page=${page}`, source)
+      .finally(() => appDispatch({ type: 'endLoading' }))
       .then(({ data }) => {
         const typed: MessageType[] = data
           .map((one: RawMessageType | RawDMType) => (
@@ -91,21 +90,31 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
+    if (chatting) appDispatch({ type: 'loading' });
     setChats([]);
     isSending.current = false;
     setChat('');
-    setPage(chatting ? 1 : 0);
-    setChatEnd(!chatting);
-    source.cancel();
+    setPage(-1);
+    setChatEnd(true);
     if (chatting && chatting.type === 'channel') {
       asyncGetRequest(makeAPIPath(`/channels/${chatting.name}/members`))
         .then(({ data }) => { setMembers(data); })
         .catch((error) => { errorMessageHandler(error); });
     } else setMembers([]);
+
+    return () => {
+      source.cancel();
+      setPage(-1);
+      setChatEnd(true);
+    };
   }, [chatting]);
 
   useEffect(() => {
-    fetchItems();
+    if (page > 0) fetchItems();
+    else {
+      setPage(0);
+      setChatEnd(false);
+    }
   }, [page]);
 
   useEffect(() => {
@@ -138,8 +147,8 @@ const ChatPage = () => {
   // eslint-disable-next-line no-unused-vars
   const [_, setRef] = useIntersect(async (entry: any, observer: any) => {
     observer.unobserve(entry.target);
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    setPage((prev) => prev + 1);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    setPage((prev) => (isChatEnd ? prev : prev + 1));
     observer.observe(entry.target);
   });
 

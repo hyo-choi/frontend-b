@@ -77,7 +77,7 @@ const ChannelList = ({ type }: ListProps) => {
   // eslint-disable-next-line no-unused-vars
   const [_, setRef] = useIntersect(async (entry: any, observer: any) => {
     observer.unobserve(entry.target);
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    await new Promise((resolve) => setTimeout(resolve, 10));
     setPage((prev) => prev + 1);
     observer.observe(entry.target);
   });
