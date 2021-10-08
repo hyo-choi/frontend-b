@@ -114,7 +114,7 @@ const ChannelManagePage = ({ match }: RouteComponentProps<MatchParams>) => {
         onClose={dialog.onClose}
       />
       <Grid container justifyContent="space-between" alignItems="center">
-        <Typo variant="h6">{`🛠 채널 관리: ${channelName}`}</Typo>
+        <Typo variant="h6">{`🛠 채널 관리: ${decodeURIComponent(channelName)}`}</Typo>
         <Button variant="outlined" onClick={handleChangePassword}>채널 정보 변경</Button>
       </Grid>
       <List height="78vh" scroll>

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import strictUriEncode from 'strict-uri-encode';
 import { useHistory } from 'react-router-dom';
 import { Grid, makeStyles } from '@material-ui/core';
 import { toast } from 'react-toastify';
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
 });
 
 const CHANNEL_NAME_AVAILABLE = '채널명 중복검사를 실행하세요';
-const CHANNEL_NAME_HELPER_TEXT = '앞뒤 공백 없는 한글/영문/숫자/공백 3-18자';
+const CHANNEL_NAME_HELPER_TEXT = '앞뒤 공백 없는 3-18자(\\,% 제외)';
 const CHANNEL_PASSWORD_AVAILABLE = '사용할 수 있는 비밀번호';
 const CHANNEL_PASSWORD_HELPER_TEXT = '공백 제외 모든 문자+숫자 4-32자';
 const PASSWORD_CHECK_YES = '비밀번호 일치';
@@ -63,7 +64,7 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
   const handleChannelNameChange = useCallback((event: React.ChangeEvent<Element>) => {
     const { value } = (event as React.ChangeEvent<HTMLInputElement>).target;
     if (value.length > 18) return;
-    if (/^[^\s]+(\s+[^\s]+)*$/.test(value) && /^[0-9a-zA-z\uAC00-\uD7A3\s]{3,18}$/.test(value)) {
+    if (/^[^\s]+(\s+[^\s]+)*$/.test(value) && (/^[^\\%]{3,18}$/).test(value)) {
       setValidChannelName(true);
       setHelperTextChannelName(CHANNEL_NAME_AVAILABLE);
     } else {
@@ -159,7 +160,7 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
 
   const handleChannelNameCheck = useCallback(() => {
     appDispatch({ type: 'loading' });
-    axios.head(`/channels/${channelName}`)
+    axios.head(`/channels/${strictUriEncode(channelName)}`)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -191,7 +192,7 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
     if (channel) {
       setValidChannelName(true);
       setDuplicateChecked(true);
-      setChannelName(channel);
+      setChannelName(decodeURIComponent(channel));
       asyncGetRequest(`/channels/${channel}`)
         .then(({ data }) => {
           setToggleCheck(data.password !== null);

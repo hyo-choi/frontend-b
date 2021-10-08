@@ -3,6 +3,7 @@ import {
   Switch, Route, Redirect, useHistory, useLocation,
 } from 'react-router-dom';
 import axios from 'axios';
+import strictUriEncode from 'strict-uri-encode';
 import { io } from 'socket.io-client';
 // eslint-disable-next-line camelcase
 import { unstable_createMuiStrictModeTheme } from '@material-ui/core';
@@ -126,7 +127,7 @@ const App = () => {
             channels: appState.channels.map((channel) => (
               channel.name === name ? { ...channel, role: 'MEMBER' } : { ...channel })),
           });
-          if (location.pathname === `/channel/manage/${encodeURI(name)}`) {
+          if (location.pathname === `/channel/manage/${strictUriEncode(name)}`) {
             history.push('/channel');
             toast.warn(`${name} 채널의 권한이 관리자에서 멤버로 변경되었습니다.`);
           }

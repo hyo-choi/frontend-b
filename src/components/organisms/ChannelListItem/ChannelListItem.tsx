@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import axios from 'axios';
+import strictUriEncode from 'strict-uri-encode';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Grid from '@material-ui/core/Grid';
@@ -106,7 +107,7 @@ const ChannelJoinForm = ({ info, setOpen }: ChannelJoinFormProps) => {
 
   const handleJoinChannel = () => {
     appDispatch({ type: 'loading' });
-    axios.post(`/channels/${name}/members`, isLocked ? {
+    axios.post(`/channels/${strictUriEncode(name)}/members`, isLocked ? {
       memberName: userState.name, password,
     } : { memberName: userState.name })
       .finally(() => {
@@ -172,7 +173,7 @@ const ChannelListItem = ({
 
   const handleExitChannel = useCallback(() => {
     appDispatch({ type: 'loading' });
-    axios.delete(`/channels/${name}/members/${userState.name}`)
+    axios.delete(`/channels/${strictUriEncode(name)}/members/${userState.name}`)
       .finally(() => {
         appDispatch({ type: 'endLoading' });
       })
@@ -213,7 +214,7 @@ const ChannelListItem = ({
   }, [info]);
 
   const handleManage = useCallback(() => {
-    history.push(`/channel/manage/${name}`);
+    history.push(`/channel/manage/${strictUriEncode(name)}`);
   }, []);
 
   const handleEnterChat = useCallback(() => {
