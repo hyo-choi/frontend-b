@@ -16,9 +16,8 @@ import Typo from '../../atoms/Typo/Typo';
 import GamePlayPage from '../GamePlayPage/GamePlayPage';
 import { useGameDispatch, useGameState } from '../../../utils/hooks/useGameContext';
 import useMatch from '../../../utils/hooks/useMatch';
-import { GameModeType, MatchPositionType } from '../../../types/Match';
+import { GameModeType, ReadyEventType } from '../../../types/Match';
 import { MAIN_GAME_PAGE, PLAY_PATH, WATCH_PATH } from '../../../utils/path';
-import { RawUserInfoType } from '../../../types/Response';
 
 const useStyles = makeStyles({
   root: {
@@ -54,7 +53,7 @@ const GameMainPage = () => {
 
   const handleMatchExit = (gameMode: GameModeType | null) => {
     if (gameMode) {
-      socket?.emit('leaveGame', { type: 'LADDER', mode: gameMode });
+      socket?.emit('leaveGame', { mode: gameMode });
       setOpen(false);
     }
     modeRef.current = null;
@@ -65,14 +64,9 @@ const GameMainPage = () => {
     handleExit(gameMode);
   };
 
-  const handleReadyWithRef = (
-    position: MatchPositionType,
-    player0: RawUserInfoType,
-    player1: RawUserInfoType,
-    gameSetting: any,
-  ) => {
+  const handleReadyWithRef = (data: ReadyEventType) => {
     modeRef.current = null;
-    handleReady(position, player0, player1, gameSetting);
+    handleReady(data);
   };
 
   const changeMode = (gameMode: GameModeType) => {
@@ -92,7 +86,7 @@ const GameMainPage = () => {
     socket?.on('ready', handleReadyWithRef);
     socket?.on('duplicated', handleDuplicated);
     setOpen(true);
-    socket?.emit('waiting', { type: 'LADDER', mode: gameMode });
+    socket?.emit('waiting', { mode: gameMode });
   };
 
   useEffect(() => {
@@ -115,7 +109,7 @@ const GameMainPage = () => {
 
     return () => {
       if (socket?.listeners('ready').length && modeRef.current) {
-        socket?.emit('leaveGame', { type: 'LADDER', mode: modeRef.current });
+        socket?.emit('leaveGame', { mode: modeRef.current });
       }
       modeRef.current = null;
       socket?.off('invitedToMatch', handleMatchExit);

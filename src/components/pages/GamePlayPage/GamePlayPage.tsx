@@ -49,7 +49,7 @@ const GamePlayPage = () => {
   const { socket } = useAppState();
   const history = useHistory();
   const {
-    mode, setting, player0, player1, position, isPlayer, gameType,
+    mode, setting, player0, player1, position, isPlayer,
   } = useGameState();
   const gameDispatch = useGameDispatch();
   const [state, setState] = useState<PlayStateType>('init');
@@ -66,19 +66,19 @@ const GamePlayPage = () => {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
       e.preventDefault();
-      socket?.emit('keydown', e.code === 'ArrowUp' ? 38 : 40);
+      socket?.emit('keydown', { keyCode: e.code === 'ArrowUp' ? 38 : 40 });
     }
   };
 
   const handleKeyUp = (e: KeyboardEvent) => {
     if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
       e.preventDefault();
-      socket?.emit('keyup', e.code === 'ArrowUp' ? 38 : 40);
+      socket?.emit('keyup', { keyCode: e.code === 'ArrowUp' ? 38 : 40 });
     }
   };
 
   const handleExit = () => {
-    socket?.emit('leaveGame', { type: gameType, mode });
+    socket?.emit('leaveGame', { mode });
     if (isPlayer) setState('end');
     else history.replace('/');
   };
@@ -111,7 +111,7 @@ const GamePlayPage = () => {
       ]);
     });
 
-    socket?.on('destroy', (message) => {
+    socket?.on('destroy', ({ message }) => {
       const handleClose = () => {
         gameDispatch({ type: 'reset' });
         history.replace('/');
@@ -130,7 +130,7 @@ const GamePlayPage = () => {
     });
 
     return () => {
-      if (mode) socket?.emit('leaveGame', { type: gameType, mode });
+      if (mode) socket?.emit('leaveGame', { mode });
       setOpen(false);
       gameDispatch({ type: 'reset' });
       socket?.off('update');

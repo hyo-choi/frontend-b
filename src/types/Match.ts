@@ -31,3 +31,10 @@ export type MatchType = {
   winner: UserInfoType | null,
   loser: UserInfoType | null,
 }
+
+export type ReadyEventType = {
+  position: MatchPositionType,
+  user1: RawUserInfoType,
+  user2: RawUserInfoType,
+  setting: any,
+};

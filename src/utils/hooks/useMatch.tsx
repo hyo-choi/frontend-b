@@ -10,7 +10,7 @@ import Button from '../../components/atoms/Button/Button';
 import { useAppState } from './useAppContext';
 import { useGameDispatch } from './useGameContext';
 import { RawUserInfoType } from '../../types/Response';
-import { MatchPositionType, GameModeType } from '../../types/Match';
+import { GameModeType, ReadyEventType } from '../../types/Match';
 import { SetOpenType, SetDialogType } from './useDialog';
 import { PLAY_PATH } from '../path';
 
@@ -36,21 +36,18 @@ const useMatch = (setOpen: SetOpenType, setDialog: SetDialogType) => {
   const history = useHistory();
   const location = useLocation();
 
-  const handleReady = (
-    position: MatchPositionType,
-    player0: RawUserInfoType,
-    player1: RawUserInfoType,
-    gameSetting: any,
-  ) => {
+  const handleReady = ({
+    position, user1, user2, setting,
+  }: ReadyEventType) => {
     clearTimeout(timerId.current as unknown as number || undefined);
     timerId.current = null;
     offListeners(socket);
     gameDispatch({
       type: 'ready',
       position,
-      player0,
-      player1,
-      setting: gameSetting,
+      player0: user1,
+      player1: user2,
+      setting,
     });
     setOpen(false);
     history.push(PLAY_PATH);
@@ -58,7 +55,7 @@ const useMatch = (setOpen: SetOpenType, setDialog: SetDialogType) => {
 
   const handleExit = (mode: GameModeType | null) => {
     offListeners(socket);
-    socket?.emit('leaveGame', { type: 'LADDER', mode });
+    socket?.emit('leaveGame', { mode });
     gameDispatch({ type: 'reset' });
     setOpen(false);
   };
@@ -98,14 +95,14 @@ const useMatch = (setOpen: SetOpenType, setDialog: SetDialogType) => {
       handleCancel(opponentUserId);
       toast.warn('초대 대기 시간이 1분을 초과하여 자동 취소되었습니다.');
     }, 60000);
-    socket?.on('ready', (position, player0, player1, gameSetting) => {
+    socket?.on('ready', (data: ReadyEventType) => {
       gameDispatch({
         type: 'setGame',
         gameType: 'EXHIBITION',
         mode,
         isPlayer: true,
       });
-      handleReady(position, player0, player1, gameSetting);
+      handleReady(data);
     });
     socket?.on('declined', handleDeclined);
   };
