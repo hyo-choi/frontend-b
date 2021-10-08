@@ -214,7 +214,7 @@ const UserInfoForm = ({
           } else toast.error('입력값이 잘못되었습니다. 다시 확인해주세요.');
         } else errorMessageHandler(error);
       });
-  }, [imageFile, username, is2FAEnabled, is2FAChanged]);
+  }, [isAvatarChanged, imageFile, currentName, username, is2FAEnabled, is2FAChanged]);
 
   const isValidForm = useCallback(() => {
     if (is2FAChanged) {
