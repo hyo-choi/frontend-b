@@ -141,7 +141,7 @@ const ChannelInfoForm = ({ setOpen, channel }: ChannelInfoFormProps) => {
           } else toast.error('입력값이 잘못되었습니다. 다시 확인해주세요.');
         } else errorMessageHandler(error);
       });
-  }, [channelName, isToggleChecked, checkPassword]);
+  }, [channelName, isToggleChecked, checkPassword, appState.channels, appState.socket]);
 
   const handleEdit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
