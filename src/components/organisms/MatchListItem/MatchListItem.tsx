@@ -15,34 +15,6 @@ const useStyles = makeStyles({
     width: '100%',
     height: '60px',
   },
-  image: {
-    width: '30px',
-    height: '30px',
-  },
-  lose: {
-    opacity: 0.2,
-  },
-  classic: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 blue)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem blue)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 blue)',
-  },
-  reverse: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 red)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem red)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 red)',
-  },
-  speed: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 yellow)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem yellow)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 yellow)',
-  },
   '@keyframes loading': {
     '0%': {
       backgroundColor: 'rgba(165, 165, 165, 0.1)',
@@ -119,20 +91,47 @@ const MatchListItem = ({
       case 'SPEED':
         return (
           <Tooltip arrow title="Speed Mode">
-            <img src="/images/fast.png" alt="Speed Mode" className={`${classes.image} ${isMeWinner ? classes.speed : classes.lose}`} />
+            <img
+              src="/images/fast.png"
+              alt="Speed Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 yellow)' : 'opacity(.2)',
+                WebkitFilter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 yellow)' : 'opacity(.2)',
+              }}
+            />
           </Tooltip>
         );
       case 'REVERSE':
         return (
           <Tooltip arrow title="Reverse Mode">
-            <img src="/images/reverse.png" alt="Reverse Mode" className={`${classes.image} ${isMeWinner ? classes.reverse : classes.lose}`} />
+            <img
+              src="/images/reverse.png"
+              alt="Reverse Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 red)' : 'opacity(.2)',
+                WebkitFilter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 red)' : 'opacity(.2)',
+              }}
+            />
           </Tooltip>
         );
       case 'CLASSIC':
       default:
         return (
           <Tooltip arrow title="Classic Mode">
-            <img src="/images/normal.png" alt="Classic Mode" className={`${classes.image} ${isMeWinner ? classes.classic : classes.lose}`} />
+            <img
+              src="/images/normal.png"
+              alt="Classic Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 blue)' : 'opacity(.2)',
+                WebkitFilter: isMeWinner ? 'opacity(.5) drop-shadow(0.01rem 0 0 blue)' : 'opacity(.2)',
+              }}
+            />
           </Tooltip>
         );
     }

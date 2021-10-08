@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Grid, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import MaterialButton from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 import Typo from '../../atoms/Typo/Typo';

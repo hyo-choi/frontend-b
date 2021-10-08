@@ -15,31 +15,6 @@ const useStyles = makeStyles({
     height: '60px',
     '&:hover': { color: '#208fea' },
   },
-  image: {
-    width: '30px',
-    height: '30px',
-  },
-  classic: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 blue)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem blue)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 blue)',
-  },
-  reverse: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 red)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem red)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 red)',
-  },
-  speed: {
-    filter: 'opacity(.5) drop-shadow(0 0 0 yellow)',
-    '@supports ( -moz-appearance:none )': {
-      filter: 'opacity(.5) drop-shadow(0.01rem 0.01rem 0.01rem yellow)',
-    },
-    '&::-webkit-filter': 'opacity(.5) drop-shadow(0 0 0 yellow)',
-  },
   '@keyframes loading': {
     '0%': {
       backgroundColor: 'rgba(165, 165, 165, 0.1)',
@@ -120,20 +95,47 @@ const GameListItem = ({
       case 'SPEED':
         return (
           <Tooltip arrow title="Speed Mode">
-            <img src="/images/fast.png" alt="Speed Mode" className={`${classes.image} ${classes.speed}`} />
+            <img
+              src="/images/fast.png"
+              alt="Speed Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: 'opacity(.5) drop-shadow(0.01rem 0 0 yellow)',
+                WebkitFilter: 'opacity(.5) drop-shadow(0.01rem 0 0 yellow)',
+              }}
+            />
           </Tooltip>
         );
       case 'REVERSE':
         return (
           <Tooltip arrow title="Reverse Mode">
-            <img src="/images/reverse.png" alt="Reverse Mode" className={`${classes.image} ${classes.reverse}`} />
+            <img
+              src="/images/reverse.png"
+              alt="Reverse Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: 'opacity(.5) drop-shadow(0.01rem 0 0 red)',
+                WebkitFilter: 'opacity(.5) drop-shadow(0.01rem 0 0 red)',
+              }}
+            />
           </Tooltip>
         );
       case 'CLASSIC':
       default:
         return (
           <Tooltip arrow title="Classic Mode">
-            <img src="/images/normal.png" alt="Classic Mode" className={`${classes.image} ${classes.classic}`} />
+            <img
+              src="/images/normal.png"
+              alt="Classic Mode"
+              style={{
+                width: '30px',
+                height: '30px',
+                filter: 'opacity(.5) drop-shadow(0.01rem 0 0 blue)',
+                WebkitFilter: 'opacity(.5) drop-shadow(0.01rem 0 0 blue)',
+              }}
+            />
           </Tooltip>
         );
     }
@@ -164,4 +166,4 @@ const GameListItem = ({
   );
 };
 
-export default React.memo(GameListItem);
+export default GameListItem;
