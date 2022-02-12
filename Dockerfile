@@ -1,4 +1,4 @@
-FROM node
+FROM node:16
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN yarn add serve
 
 COPY . .
 
-RUN yarn build
+RUN yarn build --profile
 
 EXPOSE 3000
 
