@@ -2,9 +2,9 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import ChannelUserListItem, { ChannelUserListItemSkeleton } from './ChannelUserListItem';
-import List from '../../atoms/List/List';
-import { MemberType } from '../../../types/Chat';
-import ContextProvider from '../../../utils/hooks/useContext';
+import List from '~components/atoms/List/List';
+import { MemberType } from '~types/Chat';
+import ContextProvider from '~hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
 
 export default {

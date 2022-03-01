@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
-import { Badge, makeStyles, Toolbar } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Typo from '../../atoms/Typo/Typo';
-import useLogout from '../../../utils/hooks/useLogout';
-import { useAppState } from '../../../utils/hooks/useAppContext';
-import { getUnreads } from '../../../utils/channels';
+import {
+  Badge, makeStyles, Toolbar, Grid, AppBar,
+} from '@material-ui/core';
+import { Typo } from '~components/index';
+import useLogout from '~hooks/useLogout';
+import { useAppState } from '~hooks/useAppContext';
+import { getUnreads } from '~utils/index';
 
 const useStyles = makeStyles({
   cursor: {

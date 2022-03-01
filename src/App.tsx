@@ -5,37 +5,26 @@ import {
 import axios from 'axios';
 import strictUriEncode from 'strict-uri-encode';
 import { io } from 'socket.io-client';
-// eslint-disable-next-line camelcase
-import { unstable_createMuiStrictModeTheme } from '@material-ui/core';
+import {
+  // eslint-disable-next-line camelcase
+  unstable_createMuiStrictModeTheme, makeStyles, ThemeProvider, CircularProgress,
+} from '@material-ui/core';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useUserDispatch, useUserState } from './utils/hooks/useUserContext';
-import { useAppDispatch, useAppState } from './utils/hooks/useAppContext';
-import LoginPage from './components/pages/LoginPage/LoginPage';
-import { asyncGetRequest } from './utils/utils';
-import RegisterPage from './components/pages/RegisterPage/RegisterPage';
-import MainTemplate from './components/templates/MainTemplate/MainTemplate';
-import MFARegisterPage from './components/pages/MFARegisterPage/MFARegisterPage';
-import MFAPage from './components/pages/MFAPage/MFAPage';
-import CommunityPage from './components/pages/CommunityPage/CommunityPage';
-import ProfilePage from './components/pages/ProfilePage/ProfilePage';
 import {
-  ChannelType, DMRoomType, MessageType, RawChannelType, RawDMType, RawMessageType,
-} from './types/Chat';
-import ChannelPage from './components/pages/ChannelPage/ChannelPage';
-import { makeChannelInfo } from './utils/channels';
-import ChatPage from './components/pages/ChatPage/ChatPage';
-import { DMToMessage, messageToMessage } from './utils/chats';
-import ChannelManagePage from './components/pages/ChannelManagePage/ChannelManagePage';
-import DMPage from './components/pages/DMPage/DMPage';
-import { RawUserInfoType } from './types/Response';
-import GamePage from './components/pages/GamePage/GamePage';
-import Dialog from './components/molecules/Dialog/Dialog';
-import useDialog from './utils/hooks/useDialog';
-import useMatch from './utils/hooks/useMatch';
-import useError from './utils/hooks/useError';
+  LoginPage, RegisterPage, MFARegisterPage, MFAPage, CommunityPage, ProfilePage,
+  ChannelPage, ChatPage, ChannelManagePage, DMPage, GamePage,
+} from '~pages/index';
+import {
+  asyncGetRequest, makeChannelInfo, DMToMessage, messageToMessage,
+} from '~utils/index';
+import {
+  ChannelType, DMRoomType, MessageType, RawChannelType, RawDMType, RawMessageType, RawUserInfoType,
+} from '~types/index';
+import {
+  useAppDispatch, useAppState, useUserDispatch, useUserState, useDialog, useMatch, useError,
+} from '~hooks/index';
+import { MainTemplate, Dialog } from '~components/index';
 
 const useStyles = makeStyles({
   progress: {

@@ -1,10 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { UserInfoType } from '../../../types/User';
-import Avatar from '../../atoms/Avatar/Avatar';
-import Typo from '../../atoms/Typo/Typo';
-import { makeMatchHistoryString } from '../../../utils/utils';
+import { Grid, makeStyles } from '@material-ui/core';
+import { UserInfoType } from '~types/index';
+import { Avatar, Typo } from '~components/index';
+import { makeMatchHistoryString } from '~utils/index';
 
 type PlayerProfileProps = {
   userGameInfo: UserInfoType,

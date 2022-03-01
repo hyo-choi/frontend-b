@@ -1,0 +1,13 @@
+export { default as ChannelManagePage } from './ChannelManagePage/ChannelManagePage';
+export { default as ChannelPage } from './ChannelPage/ChannelPage';
+export { default as ChatPage } from './ChatPage/ChatPage';
+export { default as CommunityPage } from './CommunityPage/CommunityPage';
+export { default as DMPage } from './DMPage/DMPage';
+export { default as GamePage } from './GamePage/GamePage';
+export { default as GamePlayPage } from './GamePlayPage/GamePlayPage';
+export { default as GameWatchPage } from './GameWatchPage/GameWatchPage';
+export { default as LoginPage } from './LoginPage/LoginPage';
+export { default as MFAPage } from './MFAPage/MFAPage';
+export { default as MFARegisterPage } from './MFARegisterPage/MFARegisterPage';
+export { default as ProfilePage } from './ProfilePage/ProfilePage';
+export { default as RegisterPage } from './RegisterPage/RegisterPage';

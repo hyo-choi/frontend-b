@@ -2,19 +2,15 @@ import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import { useUserState } from '../../../utils/hooks/useUserContext';
-import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
-import { FriendshipType, RelatedInfoType } from '../../../types/User';
-import Button from '../../atoms/Button/Button';
-import UserProfile from '../../molecules/UserProfile/UserProfile';
-import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import UserInfoForm from '../UserInfoForm/UserInfoForm';
-import { makeRelationship } from '../../../utils/friendships';
-import Typo from '../../atoms/Typo/Typo';
-import useMatch from '../../../utils/hooks/useMatch';
-import useError from '../../../utils/hooks/useError';
+import { makeStyles, Grid } from '@material-ui/core';
+import {
+  useUserState, useAppDispatch, useAppState, SetDialogType, SetOpenType, useMatch, useError,
+} from '~hooks/index';
+import { FriendshipType, RelatedInfoType } from '~types/index';
+import {
+  Typo, Button, UserProfile, UserInfoForm,
+} from '~components/index';
+import { makeRelationship } from '~utils/index';
 
 const useStyles = makeStyles({
   root: {

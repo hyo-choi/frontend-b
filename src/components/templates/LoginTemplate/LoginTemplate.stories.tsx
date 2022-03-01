@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 import LoginTemplate from './LoginTemplate';
-import Typo from '../../atoms/Typo/Typo';
+import Typo from '~components/atoms/Typo/Typo';
 
 export default {
   component: LoginTemplate,

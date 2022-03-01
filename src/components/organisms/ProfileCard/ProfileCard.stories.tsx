@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
-import ContextProvider from '../../../utils/hooks/useContext';
-import { useUserDispatch } from '../../../utils/hooks/useUserContext';
+import ContextProvider from '~hooks/useContext';
+import { useUserDispatch } from '~hooks/useUserContext';
 import ProfileCard, { ProfileCardSkeleton } from './ProfileCard';
-import { RelatedInfoType } from '../../../types/User';
+import { RelatedInfoType } from '~types/User';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import Typo from '../../atoms/Typo/Typo';
-import List from '../../atoms/List/List';
-import ListItem from '../../atoms/ListItem/ListItem';
-import useDialog from '../../../utils/hooks/useDialog';
+import Typo from '~components/atoms/Typo/Typo';
+import List from '~components/atoms/List/List';
+import ListItem from '~components/atoms/ListItem/ListItem';
+import useDialog from '~hooks/useDialog';
 import Dialog from '../../molecules/Dialog/Dialog';
 
 export default {

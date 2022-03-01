@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 import ChannelInfoForm from './ChannelInfoForm';
-import ContextProvider from '../../../utils/hooks/useContext';
+import ContextProvider from '~hooks/useContext';
 
 export default {
   title: 'organisms/ChannelInfoForm',

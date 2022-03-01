@@ -1,20 +1,17 @@
 import React, { useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Grid from '@material-ui/core/Grid';
-import Badge from '@material-ui/core/Badge';
 import SecurityRoundedIcon from '@material-ui/icons/SecurityRounded';
-import { makeStyles, withStyles, createStyles } from '@material-ui/core/styles';
-import { useUserState } from '../../../utils/hooks/useUserContext';
-import ListItem from '../../atoms/ListItem/ListItem';
-import Typo from '../../atoms/Typo/Typo';
-import Avatar from '../../atoms/Avatar/Avatar';
-import { MembershipRole, MemberType } from '../../../types/Chat';
-import { UserStatusType } from '../../../types/User';
-import Button from '../../atoms/Button/Button';
-import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import useError from '../../../utils/hooks/useError';
+import {
+  Grid, Badge, makeStyles, withStyles, createStyles,
+} from '@material-ui/core';
+import {
+  useUserState, SetDialogType, SetOpenType, useAppDispatch, useError,
+} from '~hooks/index';
+import {
+  ListItem, Typo, Avatar, Button,
+} from '~components/index';
+import { MembershipRole, MemberType, UserStatusType } from '~types/index';
 
 type StyleProps = {
   status: UserStatusType,

@@ -3,20 +3,16 @@ import axios from 'axios';
 import strictUriEncode from 'strict-uri-encode';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { Badge, Grid, makeStyles } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
-import Badge from '@material-ui/core/Badge';
-import Typo from '../../atoms/Typo/Typo';
-import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import ListItem from '../../atoms/ListItem/ListItem';
-import { ChannelType } from '../../../types/Chat';
-import Button from '../../atoms/Button/Button';
-import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
-import { makeDateString } from '../../../utils/utils';
-import { useUserState } from '../../../utils/hooks/useUserContext';
-import Input from '../../atoms/Input/Input';
-import useError from '../../../utils/hooks/useError';
+import {
+  Typo, ListItem, Button, Input,
+} from '~components/index';
+import {
+  SetDialogType, SetOpenType, useAppDispatch, useAppState, useUserState, useError,
+} from '~hooks/index';
+import { ChannelType } from '~types/index';
+import { makeDateString } from '~utils/index';
 
 const useStyles = makeStyles({
   root: {

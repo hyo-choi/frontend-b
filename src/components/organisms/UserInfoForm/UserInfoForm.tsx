@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import MaterialButton from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
-import Typo from '../../atoms/Typo/Typo';
-import Avatar from '../../atoms/Avatar/Avatar';
-import { makeAPIPath } from '../../../utils/utils';
-import { useUserDispatch } from '../../../utils/hooks/useUserContext';
-import { useAppDispatch } from '../../../utils/hooks/useAppContext';
-import Input from '../../atoms/Input/Input';
-import Button from '../../atoms/Button/Button';
-import Switch from '../../atoms/Switch/Switch';
-import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import useLogout from '../../../utils/hooks/useLogout';
-import useError from '../../../utils/hooks/useError';
+import { makeStyles, Grid } from '@material-ui/core';
+import MaterialButton from '@material-ui/core/Button';
+import {
+  Typo, Avatar, Input, Button, Switch,
+} from '~components/index';
+import { makeAPIPath } from '~utils/index';
+import {
+  useUserDispatch, useAppDispatch, SetDialogType, SetOpenType, useLogout, useError,
+} from '~hooks/index';
 
 const useStyles = makeStyles({
   root: {

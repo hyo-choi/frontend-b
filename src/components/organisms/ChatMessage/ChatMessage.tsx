@@ -1,17 +1,12 @@
 import React, { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import Badge from '@material-ui/core/Badge';
-import Grid from '@material-ui/core/Grid';
 import SecurityRoundedIcon from '@material-ui/icons/SecurityRounded';
-import { makeStyles } from '@material-ui/core/styles';
-import { MembershipRole, MessageType } from '../../../types/Chat';
-import Avatar from '../../atoms/Avatar/Avatar';
-import Typo from '../../atoms/Typo/Typo';
-import { SetDialogType, SetOpenType } from '../../../utils/hooks/useDialog';
-import Button from '../../atoms/Button/Button';
-import { makeMatchHistoryString } from '../../../utils/utils';
-import useMatch from '../../../utils/hooks/useMatch';
-import { PLAY_PATH } from '../../../utils/path';
+import { Badge, Grid, makeStyles } from '@material-ui/core';
+import { MembershipRole, MessageType } from '~types/index';
+import { Avatar, Typo, Button } from '~components/index';
+import { SetDialogType, SetOpenType, useMatch } from '~hooks/index';
+import { makeMatchHistoryString } from '~utils/index';
+import { PLAY_PATH } from '~constants/path';
 
 type StyleProps = { me: boolean };
 

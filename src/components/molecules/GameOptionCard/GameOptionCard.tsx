@@ -1,11 +1,9 @@
 import React, { useCallback } from 'react';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import { makeStyles } from '@material-ui/core/styles';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import Typo from '../../atoms/Typo/Typo';
-import { GameModeType } from '../../../types/Match';
+import {
+  makeStyles, Card, CardMedia, CardContent, CardActionArea,
+} from '@material-ui/core';
+import { Typo } from '~components/index';
+import { GameModeType } from '~types/index';
 
 const useStyles = makeStyles({
   card: {

@@ -2,9 +2,7 @@
 import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
 import Dialog from './Dialog';
-import Button from '../../atoms/Button/Button';
-import Input from '../../atoms/Input/Input';
-import Typo from '../../atoms/Typo/Typo';
+import { Button, Input, Typo } from '~components/index';
 
 export default {
   component: Dialog,

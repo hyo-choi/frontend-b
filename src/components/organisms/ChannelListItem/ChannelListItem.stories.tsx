@@ -2,10 +2,10 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import ChannelListItem, { ChannelListItemSkeleton } from './ChannelListItem';
-import { ChannelType } from '../../../types/Chat';
-import List from '../../atoms/List/List';
+import { ChannelType } from '~types/Chat';
+import List from '~components/atoms/List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import ContextProvider from '../../../utils/hooks/useContext';
+import ContextProvider from '~hooks/useContext';
 
 export default {
   title: 'organisms/ChannelListItem',

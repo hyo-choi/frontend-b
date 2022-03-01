@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Badge from '@material-ui/core/Badge';
+import {
+  createStyles, makeStyles, withStyles, Grid, Badge,
+} from '@material-ui/core';
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
-import { RelatedInfoType, UserStatusType } from '../../../types/User';
-import Avatar from '../../atoms/Avatar/Avatar';
-import Typo from '../../atoms/Typo/Typo';
-import { makeMatchHistoryString } from '../../../utils/utils';
+import { RelatedInfoType, UserStatusType } from '~types/User';
+import { Avatar, Typo } from '~components/index';
+import { makeMatchHistoryString } from '~utils/index';
 
 type StyleProps = { status: UserStatusType };
 

@@ -1,9 +1,15 @@
-import { RawRelatedInfoType } from '../types/Response';
+import { RawRelatedInfoType } from '~types/Response';
 import {
-  FriendshipType, MyInfoType, RelatedInfoType, RelationshipType,
-} from '../types/User';
+  FriendshipType,
+  MyInfoType,
+  RelatedInfoType,
+  RelationshipType,
+} from '~types/User';
 
-const makeRelationship = (isMeRequester: boolean, status: FriendshipType): RelationshipType => {
+const makeRelationship = (
+  isMeRequester: boolean,
+  status: FriendshipType,
+): RelationshipType => {
   switch (status) {
     case 'ACCEPTED':
       return 'FRIEND';
@@ -17,7 +23,10 @@ const makeRelationship = (isMeRequester: boolean, status: FriendshipType): Relat
   }
 };
 
-const makeRelatedInfo = (me: MyInfoType, rawData: RawRelatedInfoType): RelatedInfoType => {
+const makeRelatedInfo = (
+  me: MyInfoType,
+  rawData: RawRelatedInfoType,
+): RelatedInfoType => {
   const {
     id, name, avatar, status, friendship, score, win, lose,
   } = rawData;

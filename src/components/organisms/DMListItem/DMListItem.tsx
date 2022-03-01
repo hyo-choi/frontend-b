@@ -1,15 +1,11 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Badge from '@material-ui/core/Badge';
-import Typo from '../../atoms/Typo/Typo';
-import ListItem from '../../atoms/ListItem/ListItem';
-import { DMRoomType } from '../../../types/Chat';
-import Avatar from '../../atoms/Avatar/Avatar';
-import { UserStatusType } from '../../../types/User';
-import Button from '../../atoms/Button/Button';
-import { useAppDispatch } from '../../../utils/hooks/useAppContext';
+import { Grid, Badge, makeStyles } from '@material-ui/core';
+import {
+  Typo, ListItem, Avatar, Button,
+} from '~components/index';
+import { DMRoomType, UserStatusType } from '~types/index';
+import { useAppDispatch } from '~hooks/index';
 
 type StyleProps = { status: UserStatusType };
 

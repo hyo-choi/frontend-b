@@ -1,7 +1,6 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Menu from '../../molecules/Menu/Menu';
+import { makeStyles, Grid } from '@material-ui/core';
+import { Menu } from '~components/index';
 
 const useStyles = makeStyles({
   root: {

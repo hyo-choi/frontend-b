@@ -2,17 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import strictUriEncode from 'strict-uri-encode';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles, Grid } from '@material-ui/core';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppState } from '../../../utils/hooks/useAppContext';
-import { asyncGetRequest } from '../../../utils/utils';
-import { SetOpenType } from '../../../utils/hooks/useDialog';
-import Input from '../../atoms/Input/Input';
-import Switch from '../../atoms/Switch/Switch';
-import Typo from '../../atoms/Typo/Typo';
-import Button from '../../atoms/Button/Button';
-import useError from '../../../utils/hooks/useError';
+import {
+  Input, Switch, Typo, Button,
+} from '~components/index';
+import {
+  useError, SetOpenType, useAppDispatch, useAppState,
+} from '~hooks/index';
+import { asyncGetRequest } from '~utils/utils';
 
 const useStyles = makeStyles({
   edit: {

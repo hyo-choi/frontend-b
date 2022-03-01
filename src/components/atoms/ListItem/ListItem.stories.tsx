@@ -8,9 +8,9 @@ import Typo from '../Typo/Typo';
 import Button from '../Button/Button';
 import List from '../List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import ContextProvider from '../../../utils/hooks/useContext';
+import ContextProvider from '~hooks/useContext';
 import ProfileCard from '../../organisms/ProfileCard/ProfileCard';
-import { RelatedInfoType } from '../../../types/User';
+import { RelatedInfoType } from '~types/User';
 
 export default {
   component: ListItem,

@@ -1,11 +1,9 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Typo from '../../atoms/Typo/Typo';
-import ListItem from '../../atoms/ListItem/ListItem';
-import { AchievementType } from '../../../types/Game';
-import { makeDateString } from '../../../utils/utils';
-import ACHIEVEMENT_LIST from '../../../utils/achievements';
+import { makeStyles, Grid } from '@material-ui/core';
+import { Typo, ListItem } from '~components/index';
+import { AchievementType } from '~types/Game';
+import { makeDateString } from '~utils/utils';
+import ACHIEVEMENT_LIST from '~constants/achievements';
 
 const useStyles = makeStyles({
   root: {

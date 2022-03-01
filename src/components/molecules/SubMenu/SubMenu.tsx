@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '../../atoms/Button/Button';
+import { makeStyles, ButtonGroup } from '@material-ui/core';
+import { Button } from '~components/index';
 
 const useStyles = makeStyles({
   default: {

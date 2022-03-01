@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { RelatedInfoType } from '../../../types/User';
+import { RelatedInfoType } from '~types/User';
 import UserProfile from './UserProfile';
 
 export default {

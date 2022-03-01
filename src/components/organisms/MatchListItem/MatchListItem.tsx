@@ -1,13 +1,8 @@
 import React, { useCallback } from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
-import Typo from '../../atoms/Typo/Typo';
-import ListItem from '../../atoms/ListItem/ListItem';
-import Avatar from '../../atoms/Avatar/Avatar';
-import { UserInfoType } from '../../../types/User';
-import { makeDateString } from '../../../utils/utils';
-import { GameModeType } from '../../../types/Match';
+import { makeStyles, Grid, Tooltip } from '@material-ui/core';
+import { Typo, ListItem, Avatar } from '~components/index';
+import { UserInfoType, GameModeType } from '~types/index';
+import { makeDateString } from '~utils/index';
 
 const useStyles = makeStyles({
   root: {

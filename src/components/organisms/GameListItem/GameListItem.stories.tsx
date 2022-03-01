@@ -2,10 +2,10 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import GameListItem, { GameListItemSkeleton } from './GameListItem';
-import List from '../../atoms/List/List';
+import List from '~components/atoms/List/List';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import ContextProvider from '../../../utils/hooks/useContext';
-import { UserInfoType } from '../../../types/User';
+import ContextProvider from '~hooks/useContext';
+import { UserInfoType } from '~types/User';
 
 export default {
   title: 'organisms/GameListItem',

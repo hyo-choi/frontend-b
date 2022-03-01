@@ -4,10 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import PlayerProfile from './PlayerProfile';
-import ContextProvider from '../../../utils/hooks/useContext';
+import ContextProvider from '~hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import Typo from '../../atoms/Typo/Typo';
-import { UserInfoType } from '../../../types/User';
+import Typo from '~components/atoms/Typo/Typo';
+import { UserInfoType } from '~types/User';
 
 export default {
   title: 'organisms/PlayerProfile',

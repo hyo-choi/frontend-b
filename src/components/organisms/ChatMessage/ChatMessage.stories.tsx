@@ -2,14 +2,14 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Meta } from '@storybook/react';
 import Grid from '@material-ui/core/Grid/Grid';
-import { MessageType } from '../../../types/Chat';
-import List from '../../atoms/List/List';
-import ContextProvider from '../../../utils/hooks/useContext';
+import { MessageType } from '~types/Chat';
+import List from '~components/atoms/List/List';
+import ContextProvider from '~hooks/useContext';
 import MainTemplate from '../../templates/MainTemplate/MainTemplate';
-import Typo from '../../atoms/Typo/Typo';
+import Typo from '~components/atoms/Typo/Typo';
 import ChatMessage from './ChatMessage';
 import Dialog from '../../molecules/Dialog/Dialog';
-import useDialog, { SetOpenType, SetDialogType } from '../../../utils/hooks/useDialog';
+import useDialog, { SetOpenType, SetDialogType } from '~hooks/useDialog';
 
 export default {
   title: 'organisms/ChatMessage',

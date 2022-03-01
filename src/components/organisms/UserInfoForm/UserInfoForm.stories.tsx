@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import UserInfoForm from './UserInfoForm';
-import ContextProvider from '../../../utils/hooks/useContext';
+import ContextProvider from '~hooks/useContext';
 
 export default {
   component: UserInfoForm,
